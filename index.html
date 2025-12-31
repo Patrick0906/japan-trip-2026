@@ -1909,39 +1909,57 @@ async function fetchWeather(cities) {
         cities.forEach(async city => {
             const el = document.getElementById(`weather-data-${city}`);
             if (!el) return;
-            
+
+            // --- 優化重點 1: 檢查快取 ---
+            // 如果這個城市已經抓過資料，直接拿來用，不用再請求網路
+            if (weatherCache[city]) {
+                updateWeatherUI(el, weatherCache[city]);
+                return;
+            }
+
             const coords = CITY_COORDINATES[city];
             if (!coords) {
                 el.innerHTML = '<span class="text-[9px] text-stone-300">-</span>';
                 return;
             }
-            
+
             try {
-                // 使用 force-cache 避免頻繁請求 API
+                // 使用 force-cache 
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`, { cache: "force-cache" });
                 
                 if (!res.ok) throw new Error('API Fail');
                 
                 const data = await res.json();
-                const temp = Math.round(data.current.temperature_2m);
-                const code = data.current.weather_code;
                 
-                el.innerHTML = `
-                    ${getWeatherIcon(code)} 
-                    <span class="text-lg font-bold font-sans text-sumi-light">${temp}°</span>
-                `;
+                // 整理資料
+                const weatherInfo = {
+                    temp: Math.round(data.current.temperature_2m),
+                    code: data.current.weather_code
+                };
+
+                // --- 優化重點 2: 存入快取 ---
+                weatherCache[city] = weatherInfo;
                 
-                // 強制重新渲染 Icon
-                if (window.lucide) {
-                    window.lucide.createIcons({
-                        root: el
-                    });
-                }
+                // 更新畫面
+                updateWeatherUI(el, weatherInfo);
+
             } catch (e) {
                 console.error(`Weather error for ${city}:`, e);
                 el.innerHTML = '<span class="text-[9px] text-stone-300">N/A</span>';
             }
         });
+    }
+
+    // 輔助函式：負責將天氣資料畫到畫面上
+    function updateWeatherUI(el, info) {
+        el.innerHTML = `
+            ${getWeatherIcon(info.code)} 
+            <span class="text-lg font-bold font-sans text-sumi-light">${info.temp}°</span>
+        `;
+        // 重新渲染 Icon
+        if (window.lucide) {
+            window.lucide.createIcons({ root: el });
+        }
     }
         
     function renderDayCard(dayIndex) {

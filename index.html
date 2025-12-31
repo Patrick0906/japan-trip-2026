@@ -1876,64 +1876,236 @@
         return `<div class="flex gap-4 group items-start">${iconHtml}<div class="flex-1 block ${!isPlainText ? 'group/link' : ''}"><div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">${displayTime ? `<span class="text-xs font-sans text-sumi-light/70 whitespace-nowrap min-w-[3.5rem] pt-0.5">${displayTime}</span>` : ''}${contentHtml}</div>${suggestionHtml}${detailsHtml}</div></div>`;
     }
 
-    function renderDayCard(dayIndex) {
-        // (Same logic, simplified call)
+     function renderDayCard(dayIndex) {
         const day = TRIP_DATA[dayIndex];
         const container = document.getElementById('main-content');
-        const cities = day.route.split(/[\s　]+/).filter(c => CITY_COORDINATES[c]);
         
-        // Weather
+        // 1. Weather Logic
+        const cities = day.route.split(/[\s　]+/).filter(c => CITY_COORDINATES[c]);
         let weatherHtml = '';
         if (cities.length > 0) {
-             weatherHtml = `<div class="flex gap-2 mb-6" id="weather-container">${cities.map(city => `<button class="flex-1 flex items-center justify-between bg-white/80 p-3 rounded-lg border border-stone-200 shadow-sm transition-transform" id="weather-btn-${city}"><div class="flex flex-col items-start"><span class="text-sm font-serif font-bold text-sumi">${city}</span><span class="text-[10px] text-sumi-light/70 font-sans">Current</span></div><div class="flex items-center gap-2" id="weather-data-${city}"><div class="w-5 h-5 bg-stone-100 rounded animate-pulse"></div></div></button>`).join('')}</div>`;
+             weatherHtml = `<div class="flex gap-2 mb-6" id="weather-container">
+                ${cities.map(city => `
+                    <button class="flex-1 flex items-center justify-between bg-white/80 p-3 rounded-lg border border-stone-200 shadow-sm transition-transform" id="weather-btn-${city}">
+                        <div class="flex flex-col items-start">
+                            <span class="text-sm font-serif font-bold text-sumi">${city}</span>
+                            <span class="text-[10px] text-sumi-light/70 font-sans">Current</span>
+                        </div>
+                        <div class="flex items-center gap-2" id="weather-data-${city}">
+                            <div class="w-5 h-5 bg-stone-100 rounded animate-pulse"></div>
+                        </div>
+                    </button>
+                `).join('')}
+             </div>`;
+             
+             // Trigger fetch after render
              setTimeout(() => fetchWeather(cities), 0);
         }
-        
-        // Notes
+
+        // 2. Notes (Editable)
         const savedNotes = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}');
         const currentNote = savedNotes[day.date] !== undefined ? savedNotes[day.date] : day.notes;
-        const notesHtml = `<div class="bg-[#FFFBEB] p-3 rounded-md border-l-4 border-accent-gold shadow-sm relative overflow-hidden mb-6 group"><div class="absolute -right-2 -top-2 text-accent-gold/10 pointer-events-none"><i data-lucide="info" width="60" height="60"></i></div><div class="flex items-center justify-between mb-1.5 relative z-10"><span class="bg-accent-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-1">旅のメモ</span><i data-lucide="pen-line" width="12" height="12" class="text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity"></i></div><textarea id="day-note-textarea" class="note-textarea relative z-10 text-xs text-stone-700 placeholder-stone-400/50" placeholder="ここにメモを入力してください...">${currentNote}</textarea></div>`;
 
-        // Itinerary
+        const notesHtml = `
+        <div class="bg-[#FFFBEB] p-3 rounded-md border-l-4 border-accent-gold shadow-sm relative overflow-hidden mb-6 group">
+            <div class="absolute -right-2 -top-2 text-accent-gold/10 pointer-events-none"><i data-lucide="info" width="60" height="60"></i></div>
+            <div class="flex items-center justify-between mb-1.5 relative z-10">
+                <span class="bg-accent-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+                    旅のメモ
+                </span>
+                <i data-lucide="pen-line" width="12" height="12" class="text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity"></i>
+            </div>
+            <textarea
+                id="day-note-textarea"
+                class="note-textarea relative z-10 text-xs text-stone-700 placeholder-stone-400/50"
+                placeholder="ここにメモを入力してください..."
+            >${currentNote}</textarea>
+        </div>`;
+
+        // 3. Itinerary Items
         const itinerary = parseItinerary(day);
         const itineraryHtml = itinerary.map(item => {
-            if (item.type === 'meal') return renderSpotItem(item, day.dayLabel); // Re-use spot logic for simplicity or define specific meal logic
-            if (item.type === 'flight') return `<div class="relative z-10 pl-2 mb-6">${renderFlightItem(item)}</div>`;
-            if (item.type === 'transport') return `<div class="relative z-10 pl-2 mb-6">${renderTransportItem(item)}</div>`;
-            if (item.type === 'spot') return `<div class="relative z-10 pl-2 mb-6">${renderSpotItem(item, day.dayLabel)}</div>`;
-            return `<div class="relative z-10 pl-2 mb-2"><div class="flex gap-4 opacity-70"><div class="shrink-0 w-7"></div><div class="py-0 text-xs text-sumi-light font-serif italic tracking-wide">${item.content}</div></div></div>`;
+            if (item.type === 'meal') {
+                const suggestions = (item.content.includes('未定') || MEAL_SUGGESTIONS[day.dayLabel]?.[item.title]) && item.title ? 
+                    (item.title === '夕食' && day.dayLabel === '2/14(土)' ? MEAL_SUGGESTIONS[day.dayLabel]['dinner_recommendations'] : MEAL_SUGGESTIONS[day.dayLabel]?.[item.title]) : null;
+                
+                let suggestionBlock = '';
+                if (suggestions) {
+                    suggestionBlock = `
+                    <div class="mt-3 pt-3 border-t border-dashed border-stone-200">
+                        <div class="text-[10px] text-sumi-light/60 mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="text-accent-gold" width="10" height="10"></i><span>${item.content.includes('未定') ? 'おすすめスポット' : 'その他のおすすめ'}</span></div>
+                        <div class="text-sm">${renderTextWithLinks(suggestions, true)}</div>
+                    </div>`;
+                }
+
+                return `
+                <div class="flex gap-4 group items-start relative z-10 pl-2 mb-6">
+                    <div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600 z-10 group-hover:border-orange-400 transition-colors shadow-[0_0_0_1px_rgba(255,255,255,1)]">
+                        <i data-lucide="utensils" width="14" height="14"></i>
+                    </div>
+                    <div class="flex-1 bg-white p-4 rounded-sm border border-stone-100 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow">
+                        <div class="text-[10px] text-orange-600/80 font-serif tracking-widest uppercase mb-1 border-b border-orange-100/50 pb-1 w-full">${item.title}</div>
+                        <div class="text-sumi font-serif text-base leading-relaxed">
+                            ${item.title?.includes('朝食') ? `<span>${item.content}</span>` : renderTextWithLinks(item.content)}
+                            ${suggestionBlock}
+                        </div>
+                        ${item.details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-100/50 text-sm text-sumi-light font-serif space-y-1">${renderTextWithLinks(item.details.join('\n'))}</div>` : ''}
+                    </div>
+                </div>`;
+            } else if (item.type === 'flight') {
+                return `<div class="relative z-10 pl-2 mb-6">${renderFlightItem(item)}</div>`;
+            } else if (item.type === 'transport') {
+                return `<div class="relative z-10 pl-2 mb-6">${renderTransportItem(item)}</div>`;
+            } else if (item.type === 'spot') {
+                return `<div class="relative z-10 pl-2 mb-6">${renderSpotItem(item, day.dayLabel)}</div>`;
+            } else if (item.type === 'note') {
+                return `<div class="relative z-10 pl-2 mb-2"><div class="flex gap-4 opacity-70"><div class="shrink-0 w-7"></div><div class="py-0 text-xs text-sumi-light font-serif italic tracking-wide">${item.content}</div></div></div>`;
+            }
         }).join('');
 
-        // Stories & Recs
-        let storiesHtml = '';
-        if (day.stories || day.recommendations) {
-            let recs = day.recommendations ? `<div class="pl-12 mb-6 space-y-4">${day.recommendations.map(rec => `<div class="bg-white/60 p-3 rounded border border-stone-200 shadow-sm backdrop-blur-sm"><div class="flex items-center gap-2 mb-2 text-xs font-serif font-bold tracking-wider"><span class="${rec.type === 'food' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-indigo-50 text-indigo-700 border-indigo-100'} px-2 py-0.5 rounded border flex items-center gap-1"><i data-lucide="${rec.type === 'food' ? 'utensils' : 'shopping-bag'}" width="10" height="10"></i>${rec.title}</span></div><div class="flex flex-wrap gap-2">${rec.items.map(i => `<div class="inline-flex items-baseline gap-1.5 text-sm"><span class="font-serif font-bold text-sumi">${i.name}</span><span class="text-[10px] font-sans text-stone-500 bg-stone-100 px-1 rounded-sm">${i.jpName}</span></div>`).join('')}</div></div>`).join('')}</div>` : '';
-            let storyCards = day.stories ? `<div class="pl-12 space-y-4">${day.stories.map(s => `<div class="bg-[#FDFCF8] border border-stone-300/60 p-4 rounded-sm relative overflow-hidden group hover:shadow-sm transition-shadow"><div class="absolute top-0 right-0 w-8 h-8 bg-stone-100 rounded-bl-3xl z-0 transition-transform group-hover:scale-150 duration-500"></div><div class="relative z-10"><div class="mb-3"><h4 class="font-serif font-bold text-sumi flex items-center gap-2"><i data-lucide="book-open" width="14" height="14" class="text-accent-gold"></i><span>${s.title}</span></h4>${s.titleJp ? `<div class="text-xs text-accent-blue/80 font-bold font-sans ml-6 mt-1 tracking-wide leading-tight">${s.titleJp.split('\n').map((l,i) => `<span class="${i===1 ? 'block text-[8px] text-sumi-light/70 font-normal mt-0.5' : ''}">${l}</span>`).join('')}</div>` : ''}</div><div class="space-y-3">${s.contentJp ? `<p class="text-sm text-sumi leading-7 text-justify font-serif border-l-2 border-accent-gold/30 pl-3">${s.contentJp}</p>` : ''}<div class="relative pt-2"><div class="w-4 h-[1px] bg-stone-300 mb-2"></div><p class="text-xs text-sumi-light leading-relaxed text-justify font-sans opacity-90">${s.content}</p></div></div></div></div>`).join('')}</div>` : '';
-            storiesHtml = `<div class="pt-6 pl-2 relative z-10"><h3 class="flex items-center gap-3 text-sm font-serif font-bold text-sumi-light mb-4 ml-10 whitespace-nowrap"><span class="w-8 h-[1px] bg-stone-300 shrink-0"></span><span>旅のしおり</span><span class="w-full h-[1px] bg-stone-300"></span></h3>${recs}${storyCards}</div>`;
-        }
-
-        // Acc
+        // 4. Accommodation
         let accHtml = '';
         if (day.accommodation) {
-             const lines = day.accommodation.split('\n');
-             const hotelName = lines[0];
-             const details = lines.slice(1);
-             accHtml = `<div class="pt-8 relative z-10 pl-2 mb-6"><div class="flex gap-4 items-start"><div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 z-10 shadow-[0_0_0_1px_rgba(255,255,255,1)]"><i data-lucide="bed" width="14" height="14"></i></div><div class="flex-1 bg-[#F5F4F0] p-5 rounded-sm border border-stone-200 hover:border-violet-200/50 transition-colors"><h3 class="text-[10px] font-serif text-violet-600/70 uppercase tracking-widest mb-2 flex items-center gap-2"><span>Accommodation</span><span class="h-[1px] flex-1 bg-stone-300/50"></span></h3><div class="text-base font-serif text-sumi leading-relaxed">${renderTextWithLinks(hotelName, true)}${details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-200/40 text-sm text-sumi-light/90 font-serif space-y-1">${details.map(d => `<div class="flex items-start gap-2 ${d.trim().startsWith('◆') ? 'mt-1' : 'pl-3.5'}">${d.trim().startsWith('◆') ? '<div class="mt-[6px] shrink-0 w-1.5 h-1.5 bg-accent-red/60 rotate-45 border border-accent-red/30"></div>' : ''}<span>${d.replace('◆','').trim()}</span></div>`).join('')}</div>` : ''}</div></div></div></div>`;
+            const lines = day.accommodation.split('\n');
+            const hotelName = lines[0];
+            const details = lines.slice(1);
+            accHtml = `
+            <div class="pt-8 relative z-10 pl-2 mb-6">
+                <div class="flex gap-4 items-start">
+                    <div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 z-10 shadow-[0_0_0_1px_rgba(255,255,255,1)]">
+                        <i data-lucide="bed" width="14" height="14"></i>
+                    </div>
+                    <div class="flex-1 bg-[#F5F4F0] p-5 rounded-sm border border-stone-200 hover:border-violet-200/50 transition-colors">
+                        <h3 class="text-[10px] font-serif text-violet-600/70 uppercase tracking-widest mb-2 flex items-center gap-2"><span>Accommodation</span><span class="h-[1px] flex-1 bg-stone-300/50"></span></h3>
+                        <div class="text-base font-serif text-sumi leading-relaxed">
+                            ${renderTextWithLinks(hotelName, true)}
+                            ${details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-200/40 text-sm text-sumi-light/90 font-serif space-y-1">${details.map(d => `<div class="flex items-start gap-2 ${d.trim().startsWith('◆') ? 'mt-1' : 'pl-3.5'}">${d.trim().startsWith('◆') ? '<div class="mt-[6px] shrink-0 w-1.5 h-1.5 bg-accent-red/60 rotate-45 border border-accent-red/30"></div>' : ''}<span>${d.replace('◆','').trim()}</span></div>`).join('')}</div>` : ''}
+                            ${(day.date === '2026年2月12日' || day.date === '2026年2月13日') ? `<div class="mt-2 pt-2 border-t border-stone-200/40"><a href="https://www.torican.jp/feature/tottorishi-syukuhakuCP-2" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs font-bold text-accent-red hover:text-red-700 transition-colors"><i data-lucide="ticket" width="14" height="14"></i><span>鳥取市宿泊CP</span></a></div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
         }
 
-        container.innerHTML = `<div class="w-full max-w-lg mx-auto pb-32 animate-fade-in px-5">${weatherHtml}${notesHtml}<div class="space-y-6 relative"><div class="absolute left-[15px] top-2 bottom-2 w-[1px] bg-stone-300/50 z-0"></div>${itineraryHtml}</div>${accHtml}${storiesHtml}<div class="mt-16 flex justify-center opacity-20 text-accent-blue"><i data-lucide="snowflake" width="24" height="24"></i></div></div>`;
-        
+        // 5. Stories & Recommendations
+        let storiesHtml = '';
+        if (day.stories || day.recommendations) {
+            let recs = '';
+            if (day.recommendations) {
+                recs = day.recommendations.map(rec => `
+                    <div class="bg-white/60 p-3 rounded border border-stone-200 shadow-sm backdrop-blur-sm">
+                        <div class="flex items-center gap-2 mb-2 text-xs font-serif font-bold tracking-wider">
+                           ${rec.type === 'food' ? `<span class="bg-red-50 text-red-700 px-2 py-0.5 rounded border border-red-100 flex items-center gap-1"><i data-lucide="utensils" width="10" height="10"></i>${rec.title}</span>` : `<span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-100 flex items-center gap-1"><i data-lucide="shopping-bag" width="10" height="10"></i>${rec.title}</span>`}
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            ${rec.items.map(i => `<div class="inline-flex items-baseline gap-1.5 text-sm"><span class="font-serif font-bold text-sumi">${i.name}</span><span class="text-[10px] font-sans text-stone-500 bg-stone-100 px-1 rounded-sm">${i.jpName}</span></div>`).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            let storyCards = '';
+            if (day.stories) {
+                storyCards = day.stories.map(s => `
+                    <div class="bg-[#FDFCF8] border border-stone-300/60 p-4 rounded-sm relative overflow-hidden group hover:shadow-sm transition-shadow">
+                        <div class="absolute top-0 right-0 w-8 h-8 bg-stone-100 rounded-bl-3xl z-0 transition-transform group-hover:scale-150 duration-500"></div>
+                        <div class="relative z-10">
+                            <div class="mb-3">
+                                <h4 class="font-serif font-bold text-sumi flex items-center gap-2"><i data-lucide="book-open" class="text-accent-gold" width="14" height="14"></i><span>${s.title}</span></h4>
+                                ${s.titleJp ? `<div class="text-xs text-accent-blue/80 font-bold font-sans ml-6 mt-1 tracking-wide leading-tight">${s.titleJp.split('\n').map((l,i) => `<span class="${i===1 ? 'block text-[8px] text-sumi-light/70 font-normal mt-0.5' : ''}">${l}</span>`).join('')}</div>` : ''}
+                            </div>
+                            <div class="space-y-3">
+                                ${s.contentJp ? `<p class="text-sm text-sumi leading-7 text-justify font-serif border-l-2 border-accent-gold/30 pl-3">${s.contentJp}</p>` : ''}
+                                <div class="relative pt-2"><div class="w-4 h-[1px] bg-stone-300 mb-2"></div><p class="text-xs text-sumi-light leading-relaxed text-justify font-sans opacity-90">${s.content}</p></div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            storiesHtml = `
+            <div class="pt-6 pl-2 relative z-10">
+                 <h3 class="flex items-center gap-3 text-sm font-serif font-bold text-sumi-light mb-4 ml-10 whitespace-nowrap"><span class="w-8 h-[1px] bg-stone-300 shrink-0"></span><span>旅のしおり</span><span class="w-full h-[1px] bg-stone-300"></span></h3>
+                 <div class="pl-12 mb-6 space-y-4">${recs}</div>
+                 <div class="pl-12 space-y-4">${storyCards}</div>
+            </div>`;
+        }
+
+        // --- Final Assembly ---
+        container.innerHTML = `
+        <div class="w-full max-w-lg mx-auto pb-32 animate-fade-in px-5">
+            ${weatherHtml}
+            ${notesHtml}
+            <div class="space-y-6 relative">
+                 <div class="absolute left-[15px] top-2 bottom-2 w-[1px] bg-stone-300/50 z-0"></div>
+                 ${itineraryHtml}
+            </div>
+            ${accHtml}
+            ${storiesHtml}
+            <div class="mt-16 flex justify-center opacity-20 text-accent-blue"><i data-lucide="snowflake" width="24" height="24"></i></div>
+        </div>`;
+
+        // Re-initialize icons
         lucide.createIcons();
-        
-        // Note events
+
+        // --- Event Listeners for Notes ---
         const textarea = document.getElementById('day-note-textarea');
         if (textarea) {
-             const resize = () => { textarea.style.height = 'auto'; textarea.style.height = textarea.scrollHeight + 'px'; };
-             resize();
-             textarea.addEventListener('input', (e) => { resize(); const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}'); notesMap[day.date] = e.target.value; localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap)); });
+            // Auto resize helper
+            const resize = () => {
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            };
+            
+            // Initial resize
+            resize();
+
+            textarea.addEventListener('input', (e) => {
+                resize();
+                
+                // Save to localStorage
+                const newVal = e.target.value;
+                const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}');
+                notesMap[day.date] = newVal;
+                localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap));
+            });
+
+            textarea.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.isComposing) {
+                    e.preventDefault();
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const value = textarea.value;
+                    // Auto-insert bullet
+                    const insertion = '\n• ';
+                    
+                    textarea.value = value.substring(0, start) + insertion + value.substring(end);
+                    textarea.selectionStart = textarea.selectionEnd = start + insertion.length;
+                    
+                    // Trigger input event to save and resize
+                    textarea.dispatchEvent(new Event('input'));
+                }
+            });
         }
     }
 
+    async function fetchWeather(cities) {
+        cities.forEach(async city => {
+            const el = document.getElementById(`weather-data-${city}`);
+            if (!el) return;
+            const coords = CITY_COORDINATES[city];
+            if (!coords) return;
+            
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`);
+                const data = await res.json();
+                el.innerHTML = `${getWeatherIcon(data.current.weather_code)} <span class="text-lg font-bold font-sans text-sumi-light">${Math.round(data.current.temperature_2m)}°</span>`;
+                lucide.createIcons();
+            } catch (e) {
+                el.innerHTML = '<span class="text-xs text-red-400">Error</span>';
+            }
+        });
+    }
     function init() {
         const navContainer = document.getElementById('date-nav');
         navContainer.innerHTML = '';

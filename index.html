@@ -130,16 +130,18 @@
         </div>
     </div>
 
-    <script>
+<script>
     // --- Constants & Data ---
     const AIRPORT_NAMES = { TSA: '台北松山', TPE: '台北桃園', HND: '東京羽田', NRT: '東京成田', ITM: '大阪伊丹', KIX: '大阪關西', KHH: '高雄', AOJ: '青森', IZO: '出雲', TTJ: '鳥取', ICN: '首爾仁川', YGJ: '米子鬼太郎' };
     const FLIGHT_TERMINALS = { 'BR190': { origin: 'T1', dest: 'T3' }, 'BR154': { origin: 'T2', dest: 'T1' }, 'BR160': { origin: 'T2', dest: 'T1' }, 'JL277': { origin: 'T1', dest: '' }, 'NH1851': { origin: '南', dest: '' }, 'NH1856': { origin: '', dest: '南' }, 'NH298': { origin: '', dest: 'T2' }, 'NH294': { origin: '', dest: 'T2' }, 'NH381': { origin: 'T2', dest: '' }, 'BR107': { origin: 'T1', dest: '' }, 'OZ381': { origin: 'T1', dest: 'T1' }, 'OZ102': { origin: 'T2', dest: 'T1' }, 'NH389': { origin: 'T2', dest: '' } };
     const FLIGHT_AIRCRAFT = { 'BR160': 'B789', 'OZ102': 'A388', 'NH389': 'B767', 'NH1851': 'DH8', 'NH1856': 'DH8', 'NH294': 'A320', 'BR107': 'A321' };
     const CITY_COORDINATES = { "台北": { lat: 25.0330, lon: 121.5654 }, "首爾": { lat: 37.5665, lon: 126.9780 }, "仁川": { lat: 37.4563, lon: 126.7052 }, "高雄": { lat: 22.6273, lon: 120.3014 }, "東京": { lat: 35.6762, lon: 139.6503 }, "出雲": { lat: 35.3667, lon: 132.7500 }, "松江": { lat: 35.4722, lon: 133.0505 }, "大阪": { lat: 34.6937, lon: 135.5023 }, "青森": { lat: 40.8244, lon: 140.7406 }, "弘前": { lat: 40.6031, lon: 140.4624 }, "白浜": { lat: 33.6806, lon: 135.3534 }, "京都": { lat: 35.0116, lon: 135.7681 }, "神戶": { lat: 34.6901, lon: 135.1955 }, "倉吉": { lat: 35.4333, lon: 133.8167 }, "鳥取": { lat: 35.5011, lon: 134.2351 }, "新宮": { lat: 33.7239, lon: 135.9925 }, "鎌倉": { lat: 35.3192, lon: 139.5467 } };
 
-    // --- YOUR DATA ---
+    // ... (請保留您上方完整的 TRIP_DATA，這裡為了簡潔省略) ...
+    // !!! 這裡請務必貼上您完整的 TRIP_DATA !!!
+    // 如果您需要我再貼一次完整的 TRIP_DATA，請告訴我
     const TRIP_DATA = [
-  {
+     {
     date: "2026年2月1日",
     dayLabel: "2/1(日)",
     route: "台北 仁川",
@@ -1558,44 +1560,100 @@
       }
     ]
   }
-];
+    ];
 
-    // --- State ---
+    const MEAL_SUGGESTIONS = {
+        '2/1(日)': { '夕食': 'キョチョンチキン (Kyochon Chicken / 雲西駅店)\nBHCチキン (プリンクルチキン)\n本粥 (韓國お粥専門店)' },
+        '2/2(月)': { '夕食': '燒肉チャンピオン (第2ターミナル 4F / 燒肉ロール)\nアカシア (第2ターミナル 4F / ロールキャベツシチュー)\n沼津魚がし鮨 (第2ターミナル 4F / 江戶前壽司)' },
+        '2/3(火)': { '朝食': 'Hitoshinaya (だし茶漬け・粥)\nカリーうどん Cuud (カレーうどん専門店)\n羽田大勝軒 (朝つけ麵)', '昼食': 'そば處 田中屋 (出雲そば)\n看雲樓 (大社近くの老舖)\n甘右衛門 (出雲ぜんざい)', '夕食': '川京 (松江鄉土料理)\n明島 (創作和食)\n呑喰處 やまいち (宍道湖七珍)' },
+        '2/4(水)': { '昼食': '八雲庵 (鴨南蠻そば)\n皆美館 庭園茶寮 (鯛めし)\n西洋軒 (松江老舖洋食)', '夕食': 'ねぎ燒 やまもと 本店 (十三ねぎ燒)\nくそオヤジ最後の一振り (しじみラーメン)\nがんこ壽司 (關西壽司)' },
+        '2/5(木)': { '昼食': '味の札幌 大西 (味噌カレー牛乳ラーメン)\nくどうラーメン (煮干しラーメン)\n青森魚菜センター (元祖 青森のっけ丼)', '夕食': 'おさない (ホタテ料理・定食)\n一八壽し (青森地魚壽司)\n津輕じょっぱり漁屋酒場 (鄉土料理居酒屋)' },
+        '2/6(金)': { '昼食': 'シェ・アンジュ (弘前フレンチ)\nレストラン山崎 (奇跡のリンゴスープ)\n三忠食堂 本店 (津輕そば)', '夕食': '津輕居酒屋 わいは\n鄉土料理 杏 (あんず)\n津輕料理遺産 菊富士 (いかめんち)' },
+        '2/7(土)': { '昼食': 'りんごの家 (弘前りんご公園)\n大正浪漫喫茶室 (アップルパイ巡り)', '夕食': '煮干結社 弘前店 (濃厚煮干拉麵)\n鳥ふじ (焼き鳥)\n津輕藩ねぷた村' },
+        '2/8(日)': { '昼食': 'il filo (イタリア料理 イルフィーロ)\nPÂTISSERIE LE CHOCOLAT', '夕食': 'アジヨシ 総本店 (鶴橋焼肉老舗)\nあべのたこやき やまちゃん' },
+        '2/9(月)': { '昼食': 'めはりや 新宮本店 (めはり寿司)\n香梅堂 (鈴焼)', '夕食': '焼肉ひげ (熊野牛)\n総本家めはりや' },
+        '2/10(火)': { '昼食': 'とれとれ横丁 (市場内海鮮丼)\n海鮮壽司 とれとれ市場 (回転壽司)\nとれとれ亭 (海鮮バイキング)', '夕食': '幸鮨 (南紀白浜の壽司)\nBarley (地ビールと洋食)\n喜樂 (和歌山ラーメン)' },
+        '2/11(水)': { '昼食': '麺屋 猪一 (ミシュラン掲載ラーメン)\n手鞠鮨と日本茶 宗田 (手毬壽司)\n佰食屋 (國産牛ステーキ丼)', '夕食': '棲家 (おばんざい居酒屋)\n燒肉 弘 (京都の人気燒肉店)\nおめん (名代うどん・季節料理)' },
+        '2/12(木)': { '昼食': '喫鳥 ベニ屋 (カツカレー)\nすなば珈琲 (鳥取砂丘店)\n鯛喜 (豪華海鮮丼)', '夕食': 'たくみ割烹店 (しゃぶしゃぶ發祥)\nかに吉 (極上蟹料理/要予約)\nスーパー居酒屋 鳥取 (地魚料理)' },
+        '2/13(金)': { '昼食': 'ブッシェリーはなふさ (鳥取和牛)\n香味德 (牛骨ラーメン)\n町屋清水庵 (餅しゃぶ)', '夕食': '魚鮮水產 (地酒と海鮮)\n村上水產 (直營海鮮居酒屋)\nバード・ステイ・ホテル (燒き鳥バー)' },
+        '2/14(土)': { '夕食': 'SAKE MARKET 秋葉原店 (日本酒飲み放題)', 'dinner_recommendations': '鮨 晴々 (はればれ)\n饗 くろ喜 (もてなしくろき)\n丸五 (炸豬排)' },
+        '2/15(日)': { '昼食': '魚華 (江之島丼)\n江之島小屋 (新鮮魚介)\n紀伊國屋本店 (女夫饅頭)\n磯料理 あぶらや (海鮮)\n富士見亭 (江之島眺望)\n文佐食堂 (しらす生姜)', '夕食': 'ストーン (名物焼きカレー)\n水新菜館 (あんかけ焼きそば)\n洋食 大吉 (昔ながらの洋食)' },
+        '2/16(月)': { '昼食': '日本の中華そば富田 (成田第1 T1 / つけ麵)\n壽司 京辰 (成田第1 T1 / 江戶前壽司)\ngihey (成田第1 T1 / 究極のご飯)', '夕食': '機內食' }
+    };
+    const customLinks = {
+        '弘前城雪燈籠まつり': 'https://www.hirosaki-kanko.or.jp/edit.html?id=cat02_winter_yuki',
+        'ぐるっと鳥取周遊タクシー': 'https://www.city.tottori.lg.jp/www/contents/1595918680657/index.html',
+        '宍道湖夕日情報': 'https://www.kankou-matsue.jp/omoshiro/sunset/sunset_information',
+        '搭乘ストーブ列車': 'https://tsutetsu.com/stove',
+        '三重の塔': 'https://maps.app.goo.gl/WZ4RZvGAvsMTxLVf6?g_st=ipc',
+        'MIA COFFEE ROASTERS': 'https://maps.app.goo.gl/1X3MMHmpAU3L4ymu9',
+        '鳥ふじ': 'https://maps.app.goo.gl/DnjAWP3k47x2gVRj7',
+        '一文字家 松江駅売店': 'https://maps.app.goo.gl/M4dDZgAFmr36Xk4Z7',
+        '大門跡': 'https://maps.app.goo.gl/LrdUNUaTCL6osJiJ8',
+        '那智山表参道': 'https://www.google.com/maps/search/?api=1&query=33.669697,135.892284',
+        'オークワ新宮仲之町店（買い物）': 'https://www.google.com/maps/search/?api=1&query=オークワ新宮仲之町店',
+        '第1旅客ターミナル3F中央(8番付近)': 'https://maps.app.goo.gl/MhD8hz45qSyCb9UA8',
+        '第1旅客ターミナル3F中央': 'https://maps.app.goo.gl/MhD8hz45qSyCb9UA8',
+        '第2旅客ターミナル3F中央': 'https://maps.app.goo.gl/YoHjSb19CGBiXHEf6',
+        '仁川機場第1旅客ターミナル': 'https://maps.app.goo.gl/tNZeKh7T2VxMnhEi6',
+        '六花第1旅客ターミナル3F中央': 'https://maps.app.goo.gl/MhD8hz45qSyCb9UA8',
+        '神倉神社前': 'https://maps.app.goo.gl/TH9Hbeu2CFBAEBDH9',
+        '仁川國際空港 1ターミナル': 'https://www.google.com/maps/search/?api=1&query=Incheon+International+Airport+Terminal+1',
+        '仁川國際空港': 'https://www.google.com/maps/search/?api=1&query=Incheon+International+Airport',
+        '雲西': 'https://www.google.com/maps/search/?api=1&query=Unseo+Station',
+        'Daiso': 'https://maps.app.goo.gl/e1PM6ajaGNPSuB5S7',
+        'Olive Young': 'https://maps.app.goo.gl/v6WLtP2k9acrhmL58',
+        'Lotte Mart': 'https://maps.app.goo.gl/hKxfqtWrWa5rQiEa6',
+        '第3ターミナル北コンコース': 'https://www.google.com/maps/search/?api=1&query=桃園機場第三航廈展望台',
+        'ANA FESTA (空弁購入)': 'https://maps.app.goo.gl/RK88K1GZKWxwCEAV9?g_st=ipc',
+        '乙羽': 'https://maps.app.goo.gl/JZqYY1L6bdTmyfpN7?g_st=ipc',
+        '立ち飲みやみー': 'https://www.google.com/maps/search/?api=1&query=立ち飲みやみー+京都',
+        '平等寺 (因幡堂)': 'https://maps.app.goo.gl/oY2n6Zf9mUv5uG6z8',
+        '京つけもの西利 本店': 'https://maps.app.goo.gl/d5G2iyksLzBkTVso6?g_st=ipc',
+        'Cafeふふふあん': 'https://maps.app.goo.gl/XqgexcN274dttf6y8?g_st=ipc',
+        '檀王法林寺': 'https://maps.app.goo.gl/fovLbjQgSp8ietRB7?g_st=ipc',
+        'in the Moon': 'https://maps.app.goo.gl/vC8XZTZ46cfoDCXJ6?g_st=ipc',
+        'すいば': 'https://www.google.com/maps/search/?api=1&query=すいば+京都+四条河原町',
+        'NISHITOMIYA': 'https://maps.app.goo.gl/6SjGMAZ9WGBAAcQJA?g_st=ipc',
+        'SAKE MARKET 秋葉原店': 'https://maps.app.goo.gl/rCte5hBxmPjxndcW6?g_st=ipc',
+        'JINS アトレ川崎店': 'https://maps.app.goo.gl/NRQx3BJic1WDDFTm8?g_st=ipc',
+        'ハンズ アトレ川崎店': 'https://maps.app.goo.gl/1d1sC5ggKvoWM6Ut5?g_st=ipc',
+        'B:MING LIFE STORE by BEAMS': 'https://maps.app.goo.gl/vh6PW7pgZdcji2M8A?g_st=ipc',
+        'ユニクロ': 'https://maps.app.goo.gl/XasaC5iPJk2VZZJU8?g_st=ipc',
+        'GU': 'https://maps.app.goo.gl/aL3BZAuZssMhQ7T49?g_st=ipc',
+        'FREAK\'S STORE': 'https://maps.app.goo.gl/SBBXJvtHdN581Vbj6?g_st=ipc',
+        'ふるまいや アトレ川崎店': 'https://maps.app.goo.gl/5Z62UfZDAU6ymdVa6?g_st=ipc',
+        '青森まちなかおんせん': 'https://www.google.com/maps/search/?api=1&query=青森まちなかおんせん',
+        '第2ターミナル 展望デッキ': 'https://maps.app.goo.gl/vLXM87viKaHYQ2qH8?g_st=ipc',
+        '川崎大師 平間寺': 'https://maps.app.goo.gl/43eXnYHCvHWgqJLj6?g_st=ipc',
+        '浄智寺': 'https://maps.app.goo.gl/rfdAnZW6j44nvjxn9?g_st=ipc',
+        '宝戒寺': 'https://maps.app.goo.gl/CBcifrtp77g1f72r9?g_st=ipc',
+        '妙隆寺': 'https://maps.app.goo.gl/2Z3NEKdyQqGBa4yMA?g_st=ipc',
+        '本覚寺': 'https://maps.app.goo.gl/v5dFrTqSCsd663jZ6?g_st=ipc',
+        '江島神社': 'https://maps.app.goo.gl/X6y1M8M9m4u9qX6k7',
+        '御霊神社': 'https://maps.app.goo.gl/itpjWMtbbqBZ1Cgq6?g_st=ipc',
+        '長谷寺': 'https://maps.app.goo.gl/yBFe8kKRp66j2jEs6?g_st=ipc',
+        '稲村ヶ崎温泉': 'https://maps.app.goo.gl/48RSDxpeAWEzMjw48?g_st=ipc',
+        '尾崎': 'https://maps.app.goo.gl/C5US359h73rd2GAw7?g_st=ipc',
+        '永昌園': 'https://maps.app.goo.gl/EPFTT3zfXRjC9sBKA',
+        '竹沢商店': 'https://maps.app.goo.gl/mYVGipTuQPnjrcJY7',
+        '増英蒲鉾店': 'https://maps.app.goo.gl/h1k7CEb3tWf2dwuq7',
+        '天ぷら 染谷': 'https://maps.app.goo.gl/GcPp2wvTfrUjgTqq8',
+        '惣菜 なかふじ': 'https://maps.app.goo.gl/Eg37qqMNxvT4XjGV7',
+        'あさり屋さん': 'https://maps.app.goo.gl/qLNSHtvfkiW8Wp3r7',
+        '梅むら': 'https://maps.app.goo.gl/4unAfZ8PG1wbw4qW9',
+        'HATAGO KAMAKURA': 'https://www.google.com/maps/search/?api=1&query=HATAGO+KAMAKURA',
+        '秀吉': 'https://www.google.com/maps/search/?api=1&query=鎌倉+秀吉',
+        '文佐食堂': 'https://maps.app.goo.gl/FPumG3iC9bbkfoMAA',
+        'Osteria Da Ada オステリア ダ アダ': 'https://maps.app.goo.gl/3XsGQSwgUtswYx396?g_st=ipc'
+    };
+
     let currentState = { selectedDayIndex: 0 };
 
-    // --- Helper Functions ---
-    // ✅ 這裡就是您要求的判斷邏輯，我把它整合進來了
-    function isLocationLine(line) {
-        const trimmed = line.trim();
-        if (trimmed.length < 2) return false;
-        if (customLinks[trimmed]) return true;
-        if (/^.+?\s+\d{1,2}:\d{2}\s*[-〜~]\s*.+?\s+\d{1,2}:\d{2}/.test(trimmed)) return true;
-        
-        // 排除關鍵字 (包含您剛提到的急行等)
-        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '行', '鉄道一般', '線'];
-        if (excludeKeywords.some(k => trimmed.includes(k))) return false;
-
-        // 格式排除
-        if (trimmed.startsWith('※') || trimmed.startsWith('【')) return false;
-        if (trimmed === '未定') return false;
-        if ((trimmed.includes('→') || trimmed.includes('▶')) && !trimmed.startsWith('タクシー') && /\d{1,2}:\d{2}/.test(trimmed)) return false;
-        if (trimmed.includes(' - ') && /\d{1,2}:\d/.test(trimmed) && !trimmed.includes('津輕')) return false;
-        if (trimmed.includes('⇒')) return false;
-
-        // 包含關鍵字 (地點白名單)
-        const keywords = ['店', '駅', '空港', '神社', 'ホテル', '館', '公園', '溫泉', '山', '寺', '居酒屋', '食堂', '珈琲', '壽司', '燒肉', '庵', '軒', '屋', '苑', '亭', '茶寮', '市場', '美術館', '處', '宿', 'イン', 'INN', '福乃和', 'Brewing', 'il filo', 'ローソン', 'バスターミナル', '園', '天ぷら', '惣菜', '坂', '跡', '參道', '塔', '滝', '大社', 'ターミナル', '宮', 'ユニクロ', 'BEAMS', '商店', '梅むら', 'HATAGO', '秀吉'];
-        
-        // 判斷邏輯：黑點開頭 OR 縮排 OR 包含關鍵字
-        if (line.startsWith('•') || line.startsWith('  ') || keywords.some(k => line.includes(k))) return true;
-        
-        // 判斷邏輯：純英文且大寫開頭 (通常是店名)
-        if (/^[A-Z][a-zA-Z\s.,]+$/.test(trimmed) && trimmed.length > 3) return true;
-        
-        return false;
-    }
+   // --- 1. 輔助函式 (Helpers) ---
 
     function getGoogleMapsUrl(query) {
-        // ✅ 使用 Google Maps Universal Link 並修復 $ 符號
+        // 修正：加上 $ 符號
         return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     }
 
@@ -1609,6 +1667,28 @@
         cleaned = cleaned.replace(/\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?/g, '');
         cleaned = cleaned.replace(/[\d,]+円/g, '').replace(/^タクシー\s*→\s*/, '');
         return cleaned.replace(/\s+/g, ' ').trim();
+    }
+
+    function isLocationLine(line) {
+        const trimmed = line.trim();
+        if (trimmed.length < 2) return false;
+        if (customLinks[trimmed]) return true;
+        // 時間表格式也視為地點行
+        if (/^.+?\s+\d{1,2}:\d{2}\s*[-〜~]\s*.+?\s+\d{1,2}:\d{2}/.test(trimmed)) return true;
+        
+        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '行', '鉄道一般', '線'];
+        if (excludeKeywords.some(k => trimmed.includes(k))) return false;
+
+        if (trimmed.startsWith('※') || trimmed.startsWith('【')) return false;
+        if (trimmed === '未定') return false;
+        // 排除單純的箭頭移動指示，除非是計程車
+        if ((trimmed.includes('→') || trimmed.includes('▶')) && !trimmed.startsWith('タクシー') && /\d{1,2}:\d{2}/.test(trimmed)) return false;
+        
+        const keywords = ['店', '駅', '空港', '神社', 'ホテル', '館', '公園', '溫泉', '山', '寺', '居酒屋', '食堂', '珈琲', '壽司', '燒肉', '庵', '軒', '屋', '苑', '亭', '茶寮', '市場', '美術館', '處', '宿', 'イン', 'INN', '福乃和', 'Brewing', 'il filo', 'ローソン', 'バスターミナル', '園', '天ぷら', '惣菜', '坂', '跡', '參道', '塔', '滝', '大社', 'ターミナル', '宮', 'ユニクロ', 'BEAMS', '商店', '梅むら', 'HATAGO', '秀吉'];
+        
+        if (line.startsWith('•') || line.startsWith('  ') || keywords.some(k => line.includes(k))) return true;
+        if (/^[A-Z][a-zA-Z\s.,]+$/.test(trimmed) && trimmed.length > 3) return true;
+        return false;
     }
 
     function getAirlineStyle(flightNum) {
@@ -1640,7 +1720,8 @@
         return "備案";
     }
 
-    // --- Parsing Logic ---
+    // --- 2. 核心解析邏輯 (Logic) ---
+
     function parseItinerary(day) {
         const rawLines = [
             ...(day.morning ? day.morning.split('\n') : []),
@@ -1656,17 +1737,20 @@
             line = line.trim();
             if (!line || line.match(/^-+$/) || line === '行程：') continue;
 
+            // 1. 餐食
             if (line.match(/^(朝食|昼食|夕食|午餐|晚餐)：/)) {
                 commitCurrentItem();
                 const parts = line.split('：');
                 currentItem = { type: 'meal', title: parts[0], content: parts[1] || '', details: [], raw: line };
                 continue;
             }
+            // 2. 航班
             if (line.match(/(?:BR|JL|NH|MM|IT|CI|GK|UO|OZ)\d+/) || (line.includes('-') && (line.includes('HND') || line.includes('NRT') || line.includes('ITM') || line.includes('KHH') || line.includes('AOJ') || line.includes('IZO') || line.includes('TTJ') || line.includes('ICN')))) {
                 commitCurrentItem();
                 currentItem = { type: 'flight', content: line, details: [], raw: line };
                 continue;
             }
+            // 3. 交通 (箭頭移動)
             const arrowCount = (line.match(/[→▶]/g) || []).length;
             const isTimetable = /^.+?\s+\d{1,2}:\d{2}\s*[-〜~]\s*.+?\s+\d{1,2}:\d{2}/.test(line);
             
@@ -1679,17 +1763,19 @@
                 currentItem = { type: 'transport', content: line, details: [], raw: line };
                 continue;
             }
+            // 4. 景點 (黑點開頭)
             if (line.startsWith('•')) {
                 commitCurrentItem();
                 currentItem = { type: 'spot', content: line.replace(/^•\s*/, ''), details: [], raw: line };
                 continue;
             }
+            // 5. 詳情/筆記
             if (currentItem) { currentItem.details.push(line); } 
             else { items.push({ type: 'note', content: line, details: [], raw: line }); }
         }
         commitCurrentItem();
         
-        // Meal Reorder Logic
+        // 重新排序餐食位置 (讓它出現在合理的時間點)
         const mealTypes = [{ key: 'breakfast', aliases: ['朝食', 'Breakfast', '早餐'] }, { key: 'lunch', aliases: ['昼食', 'Lunch', '午餐'] }, { key: 'dinner', aliases: ['夕食', 'Dinner', '晚餐'] }];
         mealTypes.forEach(type => {
             const mealItemIndex = items.findIndex(item => item.type === 'meal' && type.aliases.some(alias => item.title && item.title.includes(alias)));
@@ -1710,35 +1796,7 @@
         return items;
     }
 
-    // --- Rendering Helpers ---
-    
-    // ✅ 渲染景點項目，使用 isLocationLine 判斷
-    function renderSpotItem(item, dayLabel) {
-        const isBoat = (item.content.includes('遊覽船') || item.content.includes('船')) && !item.content.includes('八甲田丸');
-        
-        // 使用您的 logisticKeywords 邏輯來決定 Icon
-        const logisticKeywords = ['朝食', '昼食', '夕食', '午餐', '晚餐', '飯店', '泡湯', '行李', '超市', '可樂餅', '採買', '喝酒', 'チェックイン', 'チェックアウト', 'ホテル', '荷物', '晩酌', '機內食', '駅弁', '買い物', '購入', 'タクシー', '搭乘手續き', '手荷物預け', 'LOUNGE', 'Lounge', 'ラウンジ', '急行', 'エクスプレス', '行', '鉄道一般', '線'];
-        const isLogistic = logisticKeywords.some(keyword => item.content.includes(keyword));
-        
-        let iconHtml = isBoat ? `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10 bg-cyan-50 border border-cyan-200 rounded-full"><i data-lucide="ship" class="text-cyan-600" width="14" height="14"></i></div>` : `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10"><div class="w-2 h-2 rounded-full ${isLogistic ? 'bg-stone-400' : 'bg-accent-red'} ring-4 ring-washi group-hover:scale-110 transition-transform shadow-[0_0_0_2px_#F7F5F0]"></div></div>`;
-        
-        // 這裡再次使用您的 isLocationLine 來決定內容是否可點擊
-        const isPlainText = !isLocationLine(item.raw || item.content);
-        
-        const timeMatch = item.content.match(/^(\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?)\s+(.*)$/);
-        let displayTime = null, displayContent = item.content;
-        if (timeMatch) { displayTime = timeMatch[1]; displayContent = timeMatch[2]; }
-        
-        let contentHtml = isPlainText ? `<div class="text-sumi font-serif text-sm font-medium leading-relaxed">${displayContent}</div>` : `<a href="${getMapLink(cleanLocationName(displayContent))}" target="_blank" class="text-sumi font-serif text-sm font-medium leading-relaxed group-hover/link:text-accent-red transition-colors decoration-accent-red/30 underline-offset-4 group-hover/link:underline">${displayContent}</a>`;
-        
-        let suggestionHtml = '';
-        const mealKey = item.content.includes('朝食') ? '朝食' : (item.content.includes('昼食') ? '昼食' : (item.content.includes('夕食') ? '夕食' : null));
-        if (item.content.includes('未定') && mealKey && MEAL_SUGGESTIONS[dayLabel]?.[mealKey]) {
-            suggestionHtml = `<div class="mt-3 pt-3 border-t border-dashed border-stone-200"><div class="text-[10px] text-sumi-light/60 mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="text-accent-gold" width="10" height="10"></i><span>おすすめスポット</span></div>${renderTextWithLinks(MEAL_SUGGESTIONS[dayLabel][mealKey], true)}</div>`;
-        }
-        let detailsHtml = item.details.length > 0 ? `<div class="mt-1 text-sm text-sumi-light font-serif pl-0 border-l-2 border-stone-200 pl-3 ml-1 py-1 space-y-1">${renderTextWithLinks(item.details.join('\n'))}</div>` : '';
-        return `<div class="flex gap-4 group items-start">${iconHtml}<div class="flex-1 block ${!isPlainText ? 'group/link' : ''}"><div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">${displayTime ? `<span class="text-xs font-sans text-sumi-light/70 whitespace-nowrap min-w-[3.5rem] pt-0.5">${displayTime}</span>` : ''}${contentHtml}</div>${suggestionHtml}${detailsHtml}</div></div>`;
-    }
+    // --- 3. 渲染函式 (Renderers) ---
 
     function renderTextWithLinks(text, forceLinks = false) {
         if (!text) return '';
@@ -1805,6 +1863,33 @@
         return `<div class="flex gap-4 group items-start"><div class="mt-1 shrink-0 w-7 h-7 rounded-full flex items-center justify-center z-10 transition-colors shadow-[0_0_0_1px_rgba(255,255,255,1)] border ${colors.bg} ${colors.border} ${colors.text} ${colors.borderHover}"><i data-lucide="${colors.icon}" width="14" height="14"></i></div><div class="flex-1 bg-[#F9F8F6] p-3 rounded-sm border border-stone-200/60"><div class="text-sumi font-serif text-sm leading-relaxed mb-1 flex flex-col gap-2">${contentHtml}</div>${detailsHtml}</div></div>`;
     }
 
+    function renderSpotItem(item, dayLabel) {
+        const isBoat = (item.content.includes('遊覽船') || item.content.includes('船')) && !item.content.includes('八甲田丸');
+        
+        // 關鍵字過濾
+        const logisticKeywords = ['朝食', '昼食', '夕食', '午餐', '晚餐', '飯店', '泡湯', '行李', '超市', '可樂餅', '採買', '喝酒', 'チェックイン', 'チェックアウト', 'ホテル', '荷物', '晩酌', '機內食', '駅弁', '買い物', '購入', 'タクシー', '搭乘手續き', '手荷物預け', 'LOUNGE', 'Lounge', 'ラウンジ', '急行', 'エクスプレス', '行', '鉄道一般', '線'];
+        const isLogistic = logisticKeywords.some(keyword => item.content.includes(keyword));
+        
+        let iconHtml = isBoat ? `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10 bg-cyan-50 border border-cyan-200 rounded-full"><i data-lucide="ship" class="text-cyan-600" width="14" height="14"></i></div>` : `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10"><div class="w-2 h-2 rounded-full ${isLogistic ? 'bg-stone-400' : 'bg-accent-red'} ring-4 ring-washi group-hover:scale-110 transition-transform shadow-[0_0_0_2px_#F7F5F0]"></div></div>`;
+        
+        // 使用 isLocationLine 來決定是否為可點擊連結
+        const isPlainText = !isLocationLine(item.raw || item.content);
+        
+        const timeMatch = item.content.match(/^(\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?)\s+(.*)$/);
+        let displayTime = null, displayContent = item.content;
+        if (timeMatch) { displayTime = timeMatch[1]; displayContent = timeMatch[2]; }
+        
+        let contentHtml = isPlainText ? `<div class="text-sumi font-serif text-sm font-medium leading-relaxed">${displayContent}</div>` : `<a href="${getMapLink(cleanLocationName(displayContent))}" target="_blank" class="text-sumi font-serif text-sm font-medium leading-relaxed group-hover/link:text-accent-red transition-colors decoration-accent-red/30 underline-offset-4 group-hover/link:underline">${displayContent}</a>`;
+        
+        let suggestionHtml = '';
+        const mealKey = item.content.includes('朝食') ? '朝食' : (item.content.includes('昼食') ? '昼食' : (item.content.includes('夕食') ? '夕食' : null));
+        if (item.content.includes('未定') && mealKey && MEAL_SUGGESTIONS[dayLabel]?.[mealKey]) {
+            suggestionHtml = `<div class="mt-3 pt-3 border-t border-dashed border-stone-200"><div class="text-[10px] text-sumi-light/60 mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="text-accent-gold" width="10" height="10"></i><span>おすすめスポット</span></div>${renderTextWithLinks(MEAL_SUGGESTIONS[dayLabel][mealKey], true)}</div>`;
+        }
+        let detailsHtml = item.details.length > 0 ? `<div class="mt-1 text-sm text-sumi-light font-serif pl-0 border-l-2 border-stone-200 pl-3 ml-1 py-1 space-y-1">${renderTextWithLinks(item.details.join('\n'))}</div>` : '';
+        return `<div class="flex gap-4 group items-start">${iconHtml}<div class="flex-1 block ${!isPlainText ? 'group/link' : ''}"><div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">${displayTime ? `<span class="text-xs font-sans text-sumi-light/70 whitespace-nowrap min-w-[3.5rem] pt-0.5">${displayTime}</span>` : ''}${contentHtml}</div>${suggestionHtml}${detailsHtml}</div></div>`;
+    }
+
     function renderDayCard(dayIndex) {
         const day = TRIP_DATA[dayIndex];
         const container = document.getElementById('main-content');
@@ -1861,32 +1946,60 @@
              textarea.addEventListener('input', (e) => { resize(); const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}'); notesMap[day.date] = e.target.value; localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap)); });
         }
     }
-
+    // 重點修正的部分：INIT
     function init() {
         const navContainer = document.getElementById('date-nav');
+        if (!navContainer) return; // 安全檢查
+        
         navContainer.innerHTML = '';
+        
+        // 確保 TRIP_DATA 有資料
+        if (!TRIP_DATA || TRIP_DATA.length === 0) {
+            console.error("TRIP_DATA is empty!");
+            return;
+        }
+
         TRIP_DATA.forEach((day, index) => {
             const currentTheme = getCurrentTheme(index);
             const prevTheme = index > 0 ? getCurrentTheme(index - 1) : null;
+            
+            // 渲染主題標籤
             if (currentTheme !== prevTheme) {
                 const themeDiv = document.createElement('div');
                 themeDiv.className = "flex-shrink-0 flex items-center justify-center pl-1 pr-3 snap-start h-[4.5rem]";
                 themeDiv.innerHTML = `<div class="h-full flex items-center border-l-2 border-stone-300/30 pl-2"><span class="text-[10px] font-serif font-medium text-sumi-light/70 tracking-widest [writing-mode:vertical-rl] h-auto whitespace-nowrap">${currentTheme}</span></div>`;
                 navContainer.appendChild(themeDiv);
             }
+            
+            // 渲染日期按鈕
             const btn = document.createElement('button');
             const isSelected = index === 0;
-            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 text-washi shadow-md scale-105 border-stone-500' : 'bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200'}`;
             const dateParts = day.dayLabel.split('(')[0].split('/');
-            const dayOfWeek = day.dayLabel.match(/\((.)\)/)?.[1];
-            btn.innerHTML = `<span class="text-xl font-serif font-bold -mb-0.5 tracking-wider ${isSelected ? 'text-washi' : 'text-sumi'}">${dateParts[1]}</span><span class="text-[9px] mb-1 font-serif ${isSelected ? 'opacity-90' : 'opacity-50'}">${dayOfWeek}</span><span class="text-[8px] tracking-tighter font-medium border-t pt-0.5 w-[90%] px-0.5 text-center leading-tight whitespace-normal line-clamp-2 ${isSelected ? 'border-white/30' : 'border-stone-100 text-sumi-light'}">${day.route}</span>`;
+            const dayNum = dateParts[1] || '?'; // 安全值
+            const dayOfWeek = day.dayLabel.match(/\((.)\)/)?.[1] || '';
+            
+            // 設定樣式
+            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 text-washi shadow-md scale-105 border-stone-500' : 'bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200'}`;
+            
+            // 設定內容 (這裡使用了 innerHTML)
+            btn.innerHTML = `
+                <span class="text-xl font-serif font-bold -mb-0.5 tracking-wider ${isSelected ? 'text-washi' : 'text-sumi'}">${dayNum}</span>
+                <span class="text-[9px] mb-1 font-serif ${isSelected ? 'opacity-90' : 'opacity-50'}">${dayOfWeek}</span>
+                <span class="text-[8px] tracking-tighter font-medium border-t pt-0.5 w-[90%] px-0.5 text-center leading-tight whitespace-normal line-clamp-2 ${isSelected ? 'border-white/30' : 'border-stone-100 text-sumi-light'}">${day.route}</span>
+            `;
+            
             btn.onclick = () => selectDay(index);
             btn.setAttribute('data-day-index', index);
             navContainer.appendChild(btn);
         });
 
-        renderDayCard(0);
-        lucide.createIcons();
+        // 初始渲染
+        if (typeof renderDayCard === 'function') {
+             renderDayCard(0);
+        }
+        if (window.lucide) {
+             window.lucide.createIcons();
+        }
 
         // Footer Map Button
         const mapBtn = document.getElementById('map-btn');
@@ -1908,10 +2021,10 @@
             const idx = parseInt(btn.getAttribute('data-day-index'));
             const isSelected = idx === index;
             
-            // 更新按鈕樣式 (選中時變色)
+            // 樣式切換
             btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 text-washi shadow-md scale-105 border-stone-500' : 'bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200'}`;
             
-            // 更新內部文字顏色
+            // 內部文字顏色切換
             const span1 = btn.querySelector('span:nth-child(1)'); 
             if(span1) span1.className = `text-xl font-serif font-bold -mb-0.5 tracking-wider ${isSelected ? 'text-washi' : 'text-sumi'}`;
             
@@ -1921,17 +2034,18 @@
             const span3 = btn.querySelector('span:nth-child(3)'); 
             if(span3) span3.className = `text-[8px] tracking-tighter font-medium border-t pt-0.5 w-[90%] px-0.5 text-center leading-tight whitespace-normal line-clamp-2 ${isSelected ? 'border-white/30' : 'border-stone-100 text-sumi-light'}`;
             
-            // 自動捲動到選中的日期
             if (isSelected) {
                 btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
         });
         
-        renderDayCard(index);
+        if (typeof renderDayCard === 'function') {
+            renderDayCard(index);
+        }
     }
 
-    // 啟動程式
-    init();
+    // 啟動
+    window.addEventListener('DOMContentLoaded', init);
 
     </script>
 </body>

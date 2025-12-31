@@ -130,18 +130,16 @@
         </div>
     </div>
 
-<script>
+    <script>
     // --- Constants & Data ---
     const AIRPORT_NAMES = { TSA: '台北松山', TPE: '台北桃園', HND: '東京羽田', NRT: '東京成田', ITM: '大阪伊丹', KIX: '大阪關西', KHH: '高雄', AOJ: '青森', IZO: '出雲', TTJ: '鳥取', ICN: '首爾仁川', YGJ: '米子鬼太郎' };
     const FLIGHT_TERMINALS = { 'BR190': { origin: 'T1', dest: 'T3' }, 'BR154': { origin: 'T2', dest: 'T1' }, 'BR160': { origin: 'T2', dest: 'T1' }, 'JL277': { origin: 'T1', dest: '' }, 'NH1851': { origin: '南', dest: '' }, 'NH1856': { origin: '', dest: '南' }, 'NH298': { origin: '', dest: 'T2' }, 'NH294': { origin: '', dest: 'T2' }, 'NH381': { origin: 'T2', dest: '' }, 'BR107': { origin: 'T1', dest: '' }, 'OZ381': { origin: 'T1', dest: 'T1' }, 'OZ102': { origin: 'T2', dest: 'T1' }, 'NH389': { origin: 'T2', dest: '' } };
     const FLIGHT_AIRCRAFT = { 'BR160': 'B789', 'OZ102': 'A388', 'NH389': 'B767', 'NH1851': 'DH8', 'NH1856': 'DH8', 'NH294': 'A320', 'BR107': 'A321' };
     const CITY_COORDINATES = { "台北": { lat: 25.0330, lon: 121.5654 }, "首爾": { lat: 37.5665, lon: 126.9780 }, "仁川": { lat: 37.4563, lon: 126.7052 }, "高雄": { lat: 22.6273, lon: 120.3014 }, "東京": { lat: 35.6762, lon: 139.6503 }, "出雲": { lat: 35.3667, lon: 132.7500 }, "松江": { lat: 35.4722, lon: 133.0505 }, "大阪": { lat: 34.6937, lon: 135.5023 }, "青森": { lat: 40.8244, lon: 140.7406 }, "弘前": { lat: 40.6031, lon: 140.4624 }, "白浜": { lat: 33.6806, lon: 135.3534 }, "京都": { lat: 35.0116, lon: 135.7681 }, "神戶": { lat: 34.6901, lon: 135.1955 }, "倉吉": { lat: 35.4333, lon: 133.8167 }, "鳥取": { lat: 35.5011, lon: 134.2351 }, "新宮": { lat: 33.7239, lon: 135.9925 }, "鎌倉": { lat: 35.3192, lon: 139.5467 } };
 
-    // ... (請保留您上方完整的 TRIP_DATA，這裡為了簡潔省略) ...
-    // !!! 這裡請務必貼上您完整的 TRIP_DATA !!!
-    // 如果您需要我再貼一次完整的 TRIP_DATA，請告訴我
+    // 請務必保留您完整的 TRIP_DATA，這裡我為了確保程式碼能跑，放了完整的資料結構
     const TRIP_DATA = [
-     {
+      {
     date: "2026年2月1日",
     dayLabel: "2/1(日)",
     route: "台北 仁川",
@@ -1560,7 +1558,9 @@
       }
     ]
   }
-    ];
+    ]; 
+
+
 
     const MEAL_SUGGESTIONS = {
         '2/1(日)': { '夕食': 'キョチョンチキン (Kyochon Chicken / 雲西駅店)\nBHCチキン (プリンクルチキン)\n本粥 (韓國お粥専門店)' },
@@ -1579,8 +1579,8 @@
         '2/14(土)': { '夕食': 'SAKE MARKET 秋葉原店 (日本酒飲み放題)', 'dinner_recommendations': '鮨 晴々 (はればれ)\n饗 くろ喜 (もてなしくろき)\n丸五 (炸豬排)' },
         '2/15(日)': { '昼食': '魚華 (江之島丼)\n江之島小屋 (新鮮魚介)\n紀伊國屋本店 (女夫饅頭)\n磯料理 あぶらや (海鮮)\n富士見亭 (江之島眺望)\n文佐食堂 (しらす生姜)', '夕食': 'ストーン (名物焼きカレー)\n水新菜館 (あんかけ焼きそば)\n洋食 大吉 (昔ながらの洋食)' },
         '2/16(月)': { '昼食': '日本の中華そば富田 (成田第1 T1 / つけ麵)\n壽司 京辰 (成田第1 T1 / 江戶前壽司)\ngihey (成田第1 T1 / 究極のご飯)', '夕食': '機內食' }
-    };
-    const customLinks = {
+     };
+    const customLinks = { 
         '弘前城雪燈籠まつり': 'https://www.hirosaki-kanko.or.jp/edit.html?id=cat02_winter_yuki',
         'ぐるっと鳥取周遊タクシー': 'https://www.city.tottori.lg.jp/www/contents/1595918680657/index.html',
         '宍道湖夕日情報': 'https://www.kankou-matsue.jp/omoshiro/sunset/sunset_information',
@@ -1648,27 +1648,14 @@
         'Osteria Da Ada オステリア ダ アダ': 'https://maps.app.goo.gl/3XsGQSwgUtswYx396?g_st=ipc'
     };
 
+    // --- State ---
     let currentState = { selectedDayIndex: 0 };
 
-   // --- 1. 輔助函式 (Helpers) ---
-
-    function getGoogleMapsUrl(query) {
-        // 修正：加上 $ 符號
-        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-    }
-
-    function getMapLink(query) {
-        return customLinks[query] || getGoogleMapsUrl(query);
-    }
-
-    function cleanLocationName(line) {
-        let cleaned = line.replace(/^•\s*/, '').replace(/^(朝食|昼食|夕食|午餐|晚餐)：/, '').trim();
-        cleaned = cleaned.replace(/[\[【].*?[\]】]/g, '').replace(/[\(（].*?[\)）]/g, '');
-        cleaned = cleaned.replace(/\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?/g, '');
-        cleaned = cleaned.replace(/[\d,]+円/g, '').replace(/^タクシー\s*→\s*/, '');
-        return cleaned.replace(/\s+/g, ' ').trim();
-    }
-
+    // --- Helper Functions (保持不變) ---
+    function getGoogleMapsUrl(query) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`; }
+    function getMapLink(query) { return customLinks[query] || getGoogleMapsUrl(query); }
+    function cleanLocationName(line) { return line.replace(/^•\s*/, '').replace(/^(朝食|昼食|夕食|午餐|晚餐)：/, '').trim().replace(/[\[【].*?[\]】]/g, '').replace(/[\(（].*?[\)）]/g, '').replace(/\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?/g, '').replace(/[\d,]+円/g, '').replace(/^タクシー\s*→\s*/, '').replace(/\s+/g, ' ').trim(); }
+    
     function isLocationLine(line) {
         const trimmed = line.trim();
         if (trimmed.length < 2) return false;
@@ -1946,15 +1933,19 @@
              textarea.addEventListener('input', (e) => { resize(); const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}'); notesMap[day.date] = e.target.value; localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap)); });
         }
     }
-    // 重點修正的部分：INIT
+
+    // --- Core Logic: INIT ---
+    // 這是修復的核心
     function init() {
         const navContainer = document.getElementById('date-nav');
-        if (!navContainer) return; 
+        if (!navContainer) return;
         
-        navContainer.innerHTML = ''; // 清空容器
+        navContainer.innerHTML = '';
         
-        if (!TRIP_DATA || TRIP_DATA.length === 0) {
-            console.error("TRIP_DATA is empty!");
+        // 錯誤檢查：如果資料沒載入
+        if (typeof TRIP_DATA === 'undefined' || TRIP_DATA.length === 0) {
+            console.error("TRIP_DATA is missing! Please check your script.");
+            navContainer.innerHTML = '<div class="text-red-500 p-4">Error: Data not loaded</div>';
             return;
         }
 
@@ -1962,62 +1953,41 @@
             const currentTheme = getCurrentTheme(index);
             const prevTheme = index > 0 ? getCurrentTheme(index - 1) : null;
             
-            // 1. 渲染主題標籤 (Theme Divider)
+            // 渲染主題標籤
             if (currentTheme !== prevTheme) {
                 const themeDiv = document.createElement('div');
-                // 修正：移除 vertical-rl，改用旋轉文字，相容性更好
                 themeDiv.className = "flex-shrink-0 flex items-center justify-center pl-1 pr-3 snap-start h-[4.5rem]";
-                themeDiv.innerHTML = `
-                    <div class="h-full flex items-center border-l-2 border-stone-300/30 pl-2">
-                        <span class="text-[10px] font-serif font-medium text-sumi-light/70 tracking-widest" style="writing-mode: vertical-rl;">
-                            ${currentTheme}
-                        </span>
-                    </div>`;
+                // 使用 inline-style 確保直書效果，不依賴 tailwind class
+                themeDiv.innerHTML = `<div class="h-full flex items-center border-l-2 border-stone-300/30 pl-2"><span class="text-[10px] font-serif font-medium text-[#666666] tracking-widest" style="writing-mode: vertical-rl;">${currentTheme}</span></div>`;
                 navContainer.appendChild(themeDiv);
             }
             
-            // 2. 渲染日期按鈕 (Day Button)
+            // 渲染按鈕
             const btn = document.createElement('button');
             const isSelected = index === 0;
             const dateParts = day.dayLabel.split('(')[0].split('/');
-            const dayNum = dateParts[1] || '?';
+            const dayNum = dateParts[1] || '';
             const dayOfWeek = day.dayLabel.match(/\((.)\)/)?.[1] || '';
             
-            // 修正：簡化 Class，確保 Flex 運作正常
-            // 使用 flex-col 垂直排列，並確保文字顏色對比足夠
-            const baseClass = "flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden";
-            const activeClass = "bg-stone-500 text-washi shadow-md scale-105 border-stone-500";
-            const inactiveClass = "bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200";
-            
-            btn.className = `${baseClass} ${isSelected ? activeClass : inactiveClass}`;
+            // 設定基本的 Flexbox 樣式
+            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 border-stone-500' : 'bg-white border-stone-100 hover:border-stone-200 shadow-sm'}`;
             btn.setAttribute('data-day-index', index);
-            btn.onclick = () => selectDay(index); // 綁定點擊事件
-
-            // 修正：明確指定內部 span 的 display 為 block，防止被壓縮
+            
+            // ✅ 關鍵修復：明確指定顏色與 display:block
             btn.innerHTML = `
-                <span class="block text-xl font-serif font-bold -mb-0.5 tracking-wider leading-none ${isSelected ? 'text-[#F7F5F0]' : 'text-[#3E3E3E]'}">
-                    ${dayNum}
-                </span>
-                <span class="block text-[9px] mb-1 font-serif leading-none ${isSelected ? 'opacity-90' : 'opacity-50'}">
-                    ${dayOfWeek}
-                </span>
-                <span class="block w-[90%] text-[8px] tracking-tighter font-medium border-t pt-0.5 px-0.5 text-center leading-tight whitespace-nowrap overflow-hidden text-ellipsis ${isSelected ? 'border-white/30 text-[#F7F5F0]' : 'border-stone-100 text-[#666666]'}">
-                    ${day.route}
-                </span>
+                <span class="block text-xl font-serif font-bold -mb-0.5 tracking-wider leading-none ${isSelected ? 'text-[#F7F5F0]' : 'text-[#3E3E3E]'}">${dayNum}</span>
+                <span class="block text-[9px] mb-1 font-serif leading-none ${isSelected ? 'text-[#F7F5F0] opacity-90' : 'text-[#3E3E3E] opacity-50'}">${dayOfWeek}</span>
+                <span class="block w-[90%] text-[8px] tracking-tighter font-medium border-t pt-0.5 px-0.5 text-center leading-tight whitespace-nowrap overflow-hidden text-ellipsis ${isSelected ? 'border-white/30 text-[#F7F5F0]' : 'border-stone-100 text-[#666666]'}">${day.route}</span>
             `;
             
+            btn.onclick = () => selectDay(index);
             navContainer.appendChild(btn);
         });
 
-        // 初始渲染第一天
-        if (typeof renderDayCard === 'function') {
-             renderDayCard(0);
-        }
+        renderDayCard(0);
         
-        // 渲染圖示
-        if (window.lucide) {
-             window.lucide.createIcons();
-        }
+        // 確保 icon 顯示
+        if (window.lucide) window.lucide.createIcons();
 
         // 綁定地圖按鈕
         const mapBtn = document.getElementById('map-btn');
@@ -2030,6 +2000,7 @@
             };
         }
     }
+
     function selectDay(index) {
         currentState.selectedDayIndex = index;
         const buttons = document.querySelectorAll('#date-nav button');
@@ -2038,32 +2009,30 @@
             const idx = parseInt(btn.getAttribute('data-day-index'));
             const isSelected = idx === index;
             
-            // 樣式切換
-            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 text-washi shadow-md scale-105 border-stone-500' : 'bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200'}`;
+            // 切換容器樣式
+            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 border-stone-500' : 'bg-white border-stone-100 hover:border-stone-200 shadow-sm'}`;
             
-            // 內部文字顏色切換
-            const span1 = btn.querySelector('span:nth-child(1)'); 
-            if(span1) span1.className = `text-xl font-serif font-bold -mb-0.5 tracking-wider ${isSelected ? 'text-washi' : 'text-sumi'}`;
-            
-            const span2 = btn.querySelector('span:nth-child(2)'); 
-            if(span2) span2.className = `text-[9px] mb-1 font-serif ${isSelected ? 'opacity-90' : 'opacity-50'}`;
-            
-            const span3 = btn.querySelector('span:nth-child(3)'); 
-            if(span3) span3.className = `text-[8px] tracking-tighter font-medium border-t pt-0.5 w-[90%] px-0.5 text-center leading-tight whitespace-normal line-clamp-2 ${isSelected ? 'border-white/30' : 'border-stone-100 text-sumi-light'}`;
-            
+            // 切換內部文字顏色
+            const spans = btn.querySelectorAll('span');
+            if (spans.length >= 3) {
+                // 日期數字
+                spans[0].className = `block text-xl font-serif font-bold -mb-0.5 tracking-wider leading-none ${isSelected ? 'text-[#F7F5F0]' : 'text-[#3E3E3E]'}`;
+                // 星期
+                spans[1].className = `block text-[9px] mb-1 font-serif leading-none ${isSelected ? 'text-[#F7F5F0] opacity-90' : 'text-[#3E3E3E] opacity-50'}`;
+                // 行程路線
+                spans[2].className = `block w-[90%] text-[8px] tracking-tighter font-medium border-t pt-0.5 px-0.5 text-center leading-tight whitespace-nowrap overflow-hidden text-ellipsis ${isSelected ? 'border-white/30 text-[#F7F5F0]' : 'border-stone-100 text-[#666666]'}`;
+            }
+
             if (isSelected) {
                 btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
         });
         
-        if (typeof renderDayCard === 'function') {
-            renderDayCard(index);
-        }
+        renderDayCard(index);
     }
 
     // 啟動
     window.addEventListener('DOMContentLoaded', init);
-
-    </script>
+</script>
 </body>
 </html>

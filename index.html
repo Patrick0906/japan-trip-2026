@@ -131,14 +131,16 @@
     </div>
 
     <script>
-    // --- Constants & Data ---
+    // ---------------------------------------------------------
+    // 資料區 (請在此處填入您的資料)
+    // ---------------------------------------------------------
+
     const AIRPORT_NAMES = { TSA: '台北松山', TPE: '台北桃園', HND: '東京羽田', NRT: '東京成田', ITM: '大阪伊丹', KIX: '大阪關西', KHH: '高雄', AOJ: '青森', IZO: '出雲', TTJ: '鳥取', ICN: '首爾仁川', YGJ: '米子鬼太郎' };
     const FLIGHT_TERMINALS = { 'BR190': { origin: 'T1', dest: 'T3' }, 'BR154': { origin: 'T2', dest: 'T1' }, 'BR160': { origin: 'T2', dest: 'T1' }, 'JL277': { origin: 'T1', dest: '' }, 'NH1851': { origin: '南', dest: '' }, 'NH1856': { origin: '', dest: '南' }, 'NH298': { origin: '', dest: 'T2' }, 'NH294': { origin: '', dest: 'T2' }, 'NH381': { origin: 'T2', dest: '' }, 'BR107': { origin: 'T1', dest: '' }, 'OZ381': { origin: 'T1', dest: 'T1' }, 'OZ102': { origin: 'T2', dest: 'T1' }, 'NH389': { origin: 'T2', dest: '' } };
     const FLIGHT_AIRCRAFT = { 'BR160': 'B789', 'OZ102': 'A388', 'NH389': 'B767', 'NH1851': 'DH8', 'NH1856': 'DH8', 'NH294': 'A320', 'BR107': 'A321' };
     const CITY_COORDINATES = { "台北": { lat: 25.0330, lon: 121.5654 }, "首爾": { lat: 37.5665, lon: 126.9780 }, "仁川": { lat: 37.4563, lon: 126.7052 }, "高雄": { lat: 22.6273, lon: 120.3014 }, "東京": { lat: 35.6762, lon: 139.6503 }, "出雲": { lat: 35.3667, lon: 132.7500 }, "松江": { lat: 35.4722, lon: 133.0505 }, "大阪": { lat: 34.6937, lon: 135.5023 }, "青森": { lat: 40.8244, lon: 140.7406 }, "弘前": { lat: 40.6031, lon: 140.4624 }, "白浜": { lat: 33.6806, lon: 135.3534 }, "京都": { lat: 35.0116, lon: 135.7681 }, "神戶": { lat: 34.6901, lon: 135.1955 }, "倉吉": { lat: 35.4333, lon: 133.8167 }, "鳥取": { lat: 35.5011, lon: 134.2351 }, "新宮": { lat: 33.7239, lon: 135.9925 }, "鎌倉": { lat: 35.3192, lon: 139.5467 } };
 
-    // ... (保留您的 TRIP_DATA，因為太長我就不重複貼了，請保持原樣) ...
-    // !!! 請將您原本完整的 TRIP_DATA 陣列貼在這裡 !!!
+    // 📍 請將您原本完整的 TRIP_DATA 陣列複製貼上到下方，取代目前的空陣列 []
     const TRIP_DATA = [
       {
     date: "2026年2月1日",
@@ -1560,11 +1562,10 @@
     ]
   }
     ]; 
-    // ^^^ 上面這段 TRIP_DATA 請務必用您原本的完整資料 ^^^
 
-
-    const MEAL_SUGGESTIONS = {
-        '2/1(日)': { '夕食': 'キョチョンチキン (Kyochon Chicken / 雲西駅店)\nBHCチキン (プリンクルチキン)\n本粥 (韓國お粥専門店)' },
+    // 📍 請將您原本完整的 MEAL_SUGGESTIONS 物件複製貼上到下方
+    const MEAL_SUGGESTIONS = { 
+       '2/1(日)': { '夕食': 'キョチョンチキン (Kyochon Chicken / 雲西駅店)\nBHCチキン (プリンクルチキン)\n本粥 (韓國お粥専門店)' },
         '2/2(月)': { '夕食': '燒肉チャンピオン (第2ターミナル 4F / 燒肉ロール)\nアカシア (第2ターミナル 4F / ロールキャベツシチュー)\n沼津魚がし鮨 (第2ターミナル 4F / 江戶前壽司)' },
         '2/3(火)': { '朝食': 'Hitoshinaya (だし茶漬け・粥)\nカリーうどん Cuud (カレーうどん専門店)\n羽田大勝軒 (朝つけ麵)', '昼食': 'そば處 田中屋 (出雲そば)\n看雲樓 (大社近くの老舖)\n甘右衛門 (出雲ぜんざい)', '夕食': '川京 (松江鄉土料理)\n明島 (創作和食)\n呑喰處 やまいち (宍道湖七珍)' },
         '2/4(水)': { '昼食': '八雲庵 (鴨南蠻そば)\n皆美館 庭園茶寮 (鯛めし)\n西洋軒 (松江老舖洋食)', '夕食': 'ねぎ燒 やまもと 本店 (十三ねぎ燒)\nくそオヤジ最後の一振り (しじみラーメン)\nがんこ壽司 (關西壽司)' },
@@ -1582,8 +1583,9 @@
         '2/16(月)': { '昼食': '日本の中華そば富田 (成田第1 T1 / つけ麵)\n壽司 京辰 (成田第1 T1 / 江戶前壽司)\ngihey (成田第1 T1 / 究極のご飯)', '夕食': '機內食' }
     };
 
+    // 📍 請將您原本完整的 customLinks 物件複製貼上到下方
     const customLinks = {
-      '弘前城雪燈籠まつり': 'https://www.hirosaki-kanko.or.jp/edit.html?id=cat02_winter_yuki',
+        '弘前城雪燈籠まつり': 'https://www.hirosaki-kanko.or.jp/edit.html?id=cat02_winter_yuki',
         'ぐるっと鳥取周遊タクシー': 'https://www.city.tottori.lg.jp/www/contents/1595918680657/index.html',
         '宍道湖夕日情報': 'https://www.kankou-matsue.jp/omoshiro/sunset/sunset_information',
         '搭乘ストーブ列車': 'https://tsutetsu.com/stove',
@@ -1650,11 +1652,12 @@
         'Osteria Da Ada オステリア ダ アダ': 'https://maps.app.goo.gl/3XsGQSwgUtswYx396?g_st=ipc'
     };
 
-    // --- State ---
+    // ---------------------------------------------------------
+    // 程式邏輯 (不需要修改)
+    // ---------------------------------------------------------
+
     let currentState = { selectedDayIndex: 0 };
 
-    // --- Helper Functions ---
-    // ✅ 修正點 1: Google Maps 網址加上了 $ 符號，並使用 Universal Link
     function getGoogleMapsUrl(query) {
         return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     }
@@ -1664,7 +1667,7 @@
     }
 
     function cleanLocationName(line) {
-        let cleaned = line.replace(/^•\s*/, '').replace(/^(朝食|昼食|夕食)：/, '').trim();
+        let cleaned = line.replace(/^•\s*/, '').replace(/^(朝食|昼食|夕食|午餐|晚餐)：/, '').trim();
         cleaned = cleaned.replace(/[\[【].*?[\]】]/g, '').replace(/[\(（].*?[\)）]/g, '');
         cleaned = cleaned.replace(/\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?/g, '');
         cleaned = cleaned.replace(/[\d,]+円/g, '').replace(/^タクシー\s*→\s*/, '');
@@ -1676,16 +1679,21 @@
         if (trimmed.length < 2) return false;
         if (customLinks[trimmed]) return true;
         if (/^.+?\s+\d{1,2}:\d{2}\s*[-〜~]\s*.+?\s+\d{1,2}:\d{2}/.test(trimmed)) return true;
-        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '行', '鉄道一般', '線', 'シャトル'];
+        
+        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '行', '鉄道一般', '線', 'シャトル'];
         if (excludeKeywords.some(k => trimmed.includes(k))) return false;
+
         if (trimmed.startsWith('※') || trimmed.startsWith('【')) return false;
         if (trimmed === '未定') return false;
         if ((trimmed.includes('→') || trimmed.includes('▶')) && !trimmed.startsWith('タクシー') && /\d{1,2}:\d{2}/.test(trimmed)) return false;
         if (trimmed.includes(' - ') && /\d{1,2}:\d/.test(trimmed) && !trimmed.includes('津輕')) return false;
         if (trimmed.includes('⇒')) return false;
+
         const keywords = ['店', '駅', '空港', '神社', 'ホテル', '館', '公園', '溫泉', '山', '寺', '居酒屋', '食堂', '珈琲', '壽司', '燒肉', '庵', '軒', '屋', '苑', '亭', '茶寮', '市場', '美術館', '處', '宿', 'イン', 'INN', '福乃和', 'Brewing', 'il filo', 'ローソン', 'バスターミナル', '園', '天ぷら', '惣菜', '坂', '跡', '參道', '塔', '滝', '大社', 'ターミナル', '宮', 'ユニクロ', 'BEAMS', '商店', '梅むら', 'HATAGO', '秀吉'];
+        
         if (line.startsWith('•') || line.startsWith('  ') || keywords.some(k => line.includes(k))) return true;
         if (/^[A-Z][a-zA-Z\s.,]+$/.test(trimmed) && trimmed.length > 3) return true;
+        
         return false;
     }
 
@@ -1713,11 +1721,11 @@
         if (index <= 7) return "雪の北国";
         if (index <= 10) return "蘇りの道";
         if (index <= 12) return "風紋の記憶";
-        if (index <= 15) return "帰路";
+        if (index <= 15) return "諸福の結び"; 
+        if (index === 16) return "帰路";
         return "備案";
     }
 
-    // --- Parsing Logic ---
     function parseItinerary(day) {
         const rawLines = [
             ...(day.morning ? day.morning.split('\n') : []),
@@ -1766,7 +1774,6 @@
         }
         commitCurrentItem();
         
-        // Meal Reorder
         const mealTypes = [{ key: 'breakfast', aliases: ['朝食', 'Breakfast', '早餐'] }, { key: 'lunch', aliases: ['昼食', 'Lunch', '午餐'] }, { key: 'dinner', aliases: ['夕食', 'Dinner', '晚餐'] }];
         mealTypes.forEach(type => {
             const mealItemIndex = items.findIndex(item => item.type === 'meal' && type.aliases.some(alias => item.title && item.title.includes(alias)));
@@ -1787,7 +1794,6 @@
         return items;
     }
 
-    // --- Rendering Helpers ---
     function renderTextWithLinks(text, forceLinks = false) {
         if (!text) return '';
         const lines = text.split('\n');
@@ -1811,9 +1817,6 @@
             return `<div class="text-sumi leading-relaxed whitespace-pre-wrap pl-1 border-l-2 border-transparent">${trimmed}</div>`;
         }).join('');
     }
-
-    function renderFlightItem(item) { /* (Code unchanged - see full source) */ return `<div>${item.content}</div>`; } // Simplified for brevity in this fix block, full code in your file
-    // Note: I will use the full render functions below to ensure nothing is lost.
 
     function renderFlightItem(item) {
         const content = item.content;
@@ -1858,13 +1861,18 @@
 
     function renderSpotItem(item, dayLabel) {
         const isBoat = (item.content.includes('遊覽船') || item.content.includes('船')) && !item.content.includes('八甲田丸');
-        const logisticKeywords = ['朝食', '昼食', '夕食', '午餐', '晚餐', '飯店', '泡湯', '行李', '超市', '可樂餅', '採買', '喝酒', 'チェックイン', 'チェックアウト', 'ホテル', '荷物', '晩酌', '機內食', '駅弁', '買い物', '購入', 'タクシー', '搭乘手續き', '手荷物預け', 'LOUNGE', 'Lounge', 'ラウンジ', '急行', 'エクスプレス', '行', '鉄道一般', '線', 'シャトル'];
+        
+        const logisticKeywords = ['朝食', '昼食', '夕食', '午餐', '晚餐', '飯店', '泡湯', '行李', '超市', '可樂餅', '採買', '喝酒', 'チェックイン', 'チェックアウト', 'ホテル', '荷物', '晩酌', '機內食', '駅弁', '買い物', '購入', 'タクシー', '搭乘手續き', '手荷物預け', 'LOUNGE', 'Lounge', 'ラウンジ', '急行', 'エクスプレス', '行', '鉄道一般', '線'];
         const isLogistic = logisticKeywords.some(keyword => item.content.includes(keyword));
+        
         let iconHtml = isBoat ? `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10 bg-cyan-50 border border-cyan-200 rounded-full"><i data-lucide="ship" class="text-cyan-600" width="14" height="14"></i></div>` : `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10"><div class="w-2 h-2 rounded-full ${isLogistic ? 'bg-stone-400' : 'bg-accent-red'} ring-4 ring-washi group-hover:scale-110 transition-transform shadow-[0_0_0_2px_#F7F5F0]"></div></div>`;
-        const isPlainText = logisticKeywords.some(k => item.content.includes(k)) || item.content === '買い物';
+        
+        const isPlainText = !isLocationLine(item.raw || item.content);
+        
         const timeMatch = item.content.match(/^(\d{1,2}:\d{2}(?:\s*[-〜~]\s*\d{1,2}:\d{2})?)\s+(.*)$/);
         let displayTime = null, displayContent = item.content;
         if (timeMatch) { displayTime = timeMatch[1]; displayContent = timeMatch[2]; }
+        
         let contentHtml = isPlainText ? `<div class="text-sumi font-serif text-sm font-medium leading-relaxed">${displayContent}</div>` : `<a href="${getMapLink(cleanLocationName(displayContent))}" target="_blank" class="text-sumi font-serif text-sm font-medium leading-relaxed group-hover/link:text-accent-red transition-colors decoration-accent-red/30 underline-offset-4 group-hover/link:underline">${displayContent}</a>`;
         
         let suggestionHtml = '';
@@ -1876,59 +1884,40 @@
         return `<div class="flex gap-4 group items-start">${iconHtml}<div class="flex-1 block ${!isPlainText ? 'group/link' : ''}"><div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">${displayTime ? `<span class="text-xs font-sans text-sumi-light/70 whitespace-nowrap min-w-[3.5rem] pt-0.5">${displayTime}</span>` : ''}${contentHtml}</div>${suggestionHtml}${detailsHtml}</div></div>`;
     }
 
-     function renderDayCard(dayIndex) {
+    function renderDayCard(dayIndex) {
         const day = TRIP_DATA[dayIndex];
         const container = document.getElementById('main-content');
-        
-        // 1. Weather Logic
         const cities = day.route.split(/[\s　]+/).filter(c => CITY_COORDINATES[c]);
+        
+        // 1. Weather
         let weatherHtml = '';
         if (cities.length > 0) {
-             weatherHtml = `<div class="flex gap-2 mb-6" id="weather-container">
-                ${cities.map(city => `
-                    <button class="flex-1 flex items-center justify-between bg-white/80 p-3 rounded-lg border border-stone-200 shadow-sm transition-transform" id="weather-btn-${city}">
-                        <div class="flex flex-col items-start">
-                            <span class="text-sm font-serif font-bold text-sumi">${city}</span>
-                            <span class="text-[10px] text-sumi-light/70 font-sans">Current</span>
-                        </div>
-                        <div class="flex items-center gap-2" id="weather-data-${city}">
-                            <div class="w-5 h-5 bg-stone-100 rounded animate-pulse"></div>
-                        </div>
-                    </button>
-                `).join('')}
-             </div>`;
-             
-             // Trigger fetch after render
+             weatherHtml = `<div class="flex gap-2 mb-6" id="weather-container">${cities.map(city => `<button class="flex-1 flex items-center justify-between bg-white/80 p-3 rounded-lg border border-stone-200 shadow-sm transition-transform" id="weather-btn-${city}"><div class="flex flex-col items-start"><span class="text-sm font-serif font-bold text-sumi">${city}</span><span class="text-[10px] text-sumi-light/70 font-sans">Current</span></div><div class="flex items-center gap-2" id="weather-data-${city}"><div class="w-5 h-5 bg-stone-100 rounded animate-pulse"></div></div></button>`).join('')}</div>`;
              setTimeout(() => fetchWeather(cities), 0);
         }
-
-        // 2. Notes (Editable)
+        
+        // 2. Notes
         const savedNotes = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}');
         const currentNote = savedNotes[day.date] !== undefined ? savedNotes[day.date] : day.notes;
+        const notesHtml = `<div class="bg-[#FFFBEB] p-3 rounded-md border-l-4 border-accent-gold shadow-sm relative overflow-hidden mb-6 group"><div class="absolute -right-2 -top-2 text-accent-gold/10 pointer-events-none"><i data-lucide="info" width="60" height="60"></i></div><div class="flex items-center justify-between mb-1.5 relative z-10"><span class="bg-accent-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-1">旅のメモ</span><i data-lucide="pen-line" width="12" height="12" class="text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity"></i></div><textarea id="day-note-textarea" class="note-textarea relative z-10 text-xs text-stone-700 placeholder-stone-400/50" placeholder="ここにメモを入力してください...">${currentNote}</textarea></div>`;
 
-        const notesHtml = `
-        <div class="bg-[#FFFBEB] p-3 rounded-md border-l-4 border-accent-gold shadow-sm relative overflow-hidden mb-6 group">
-            <div class="absolute -right-2 -top-2 text-accent-gold/10 pointer-events-none"><i data-lucide="info" width="60" height="60"></i></div>
-            <div class="flex items-center justify-between mb-1.5 relative z-10">
-                <span class="bg-accent-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-1">
-                    旅のメモ
-                </span>
-                <i data-lucide="pen-line" width="12" height="12" class="text-accent-gold opacity-50 group-hover:opacity-100 transition-opacity"></i>
-            </div>
-            <textarea
-                id="day-note-textarea"
-                class="note-textarea relative z-10 text-xs text-stone-700 placeholder-stone-400/50"
-                placeholder="ここにメモを入力してください..."
-            >${currentNote}</textarea>
-        </div>`;
-
-        // 3. Itinerary Items
+        // 3. Itinerary
         const itinerary = parseItinerary(day);
         const itineraryHtml = itinerary.map(item => {
             if (item.type === 'meal') {
-                const suggestions = (item.content.includes('未定') || MEAL_SUGGESTIONS[day.dayLabel]?.[item.title]) && item.title ? 
-                    (item.title === '夕食' && day.dayLabel === '2/14(土)' ? MEAL_SUGGESTIONS[day.dayLabel]['dinner_recommendations'] : MEAL_SUGGESTIONS[day.dayLabel]?.[item.title]) : null;
-                
+                const mealKey = item.title;
+                let suggestions = null;
+                const keyMap = { '早餐': '朝食', '午餐': '昼食', '晚餐': '夕食', 'Breakfast': '朝食', 'Lunch': '昼食', 'Dinner': '夕食' };
+                const lookupKey = keyMap[item.title] || item.title;
+
+                if (MEAL_SUGGESTIONS[day.dayLabel]) {
+                    if (day.dayLabel === '2/14(土)' && lookupKey === '夕食') {
+                        suggestions = MEAL_SUGGESTIONS[day.dayLabel]['dinner_recommendations'] || MEAL_SUGGESTIONS[day.dayLabel]['夕食'];
+                    } else {
+                        suggestions = MEAL_SUGGESTIONS[day.dayLabel][lookupKey];
+                    }
+                }
+
                 let suggestionBlock = '';
                 if (suggestions) {
                     suggestionBlock = `
@@ -1952,188 +1941,80 @@
                         ${item.details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-100/50 text-sm text-sumi-light font-serif space-y-1">${renderTextWithLinks(item.details.join('\n'))}</div>` : ''}
                     </div>
                 </div>`;
-            } else if (item.type === 'flight') {
-                return `<div class="relative z-10 pl-2 mb-6">${renderFlightItem(item)}</div>`;
-            } else if (item.type === 'transport') {
-                return `<div class="relative z-10 pl-2 mb-6">${renderTransportItem(item)}</div>`;
-            } else if (item.type === 'spot') {
-                return `<div class="relative z-10 pl-2 mb-6">${renderSpotItem(item, day.dayLabel)}</div>`;
-            } else if (item.type === 'note') {
-                return `<div class="relative z-10 pl-2 mb-2"><div class="flex gap-4 opacity-70"><div class="shrink-0 w-7"></div><div class="py-0 text-xs text-sumi-light font-serif italic tracking-wide">${item.content}</div></div></div>`;
-            }
+            } 
+            
+            if (item.type === 'flight') return `<div class="relative z-10 pl-2 mb-6">${renderFlightItem(item)}</div>`;
+            if (item.type === 'transport') return `<div class="relative z-10 pl-2 mb-6">${renderTransportItem(item)}</div>`;
+            if (item.type === 'spot') return `<div class="relative z-10 pl-2 mb-6">${renderSpotItem(item, day.dayLabel)}</div>`;
+            return `<div class="relative z-10 pl-2 mb-2"><div class="flex gap-4 opacity-70"><div class="shrink-0 w-7"></div><div class="py-0 text-xs text-sumi-light font-serif italic tracking-wide">${item.content}</div></div></div>`;
         }).join('');
 
         // 4. Accommodation
         let accHtml = '';
         if (day.accommodation) {
-            const lines = day.accommodation.split('\n');
-            const hotelName = lines[0];
-            const details = lines.slice(1);
-            accHtml = `
-            <div class="pt-8 relative z-10 pl-2 mb-6">
-                <div class="flex gap-4 items-start">
-                    <div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 z-10 shadow-[0_0_0_1px_rgba(255,255,255,1)]">
-                        <i data-lucide="bed" width="14" height="14"></i>
-                    </div>
-                    <div class="flex-1 bg-[#F5F4F0] p-5 rounded-sm border border-stone-200 hover:border-violet-200/50 transition-colors">
-                        <h3 class="text-[10px] font-serif text-violet-600/70 uppercase tracking-widest mb-2 flex items-center gap-2"><span>Accommodation</span><span class="h-[1px] flex-1 bg-stone-300/50"></span></h3>
-                        <div class="text-base font-serif text-sumi leading-relaxed">
-                            ${renderTextWithLinks(hotelName, true)}
-                            ${details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-200/40 text-sm text-sumi-light/90 font-serif space-y-1">${details.map(d => `<div class="flex items-start gap-2 ${d.trim().startsWith('◆') ? 'mt-1' : 'pl-3.5'}">${d.trim().startsWith('◆') ? '<div class="mt-[6px] shrink-0 w-1.5 h-1.5 bg-accent-red/60 rotate-45 border border-accent-red/30"></div>' : ''}<span>${d.replace('◆','').trim()}</span></div>`).join('')}</div>` : ''}
-                            ${(day.date === '2026年2月12日' || day.date === '2026年2月13日') ? `<div class="mt-2 pt-2 border-t border-stone-200/40"><a href="https://www.torican.jp/feature/tottorishi-syukuhakuCP-2" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs font-bold text-accent-red hover:text-red-700 transition-colors"><i data-lucide="ticket" width="14" height="14"></i><span>鳥取市宿泊CP</span></a></div>` : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+             const lines = day.accommodation.split('\n');
+             const hotelName = lines[0];
+             const details = lines.slice(1);
+             accHtml = `<div class="pt-8 relative z-10 pl-2 mb-6"><div class="flex gap-4 items-start"><div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 z-10 shadow-[0_0_0_1px_rgba(255,255,255,1)]"><i data-lucide="bed" width="14" height="14"></i></div><div class="flex-1 bg-[#F5F4F0] p-5 rounded-sm border border-stone-200 hover:border-violet-200/50 transition-colors"><h3 class="text-[10px] font-serif text-violet-600/70 uppercase tracking-widest mb-2 flex items-center gap-2"><span>Accommodation</span><span class="h-[1px] flex-1 bg-stone-300/50"></span></h3><div class="text-base font-serif text-sumi leading-relaxed">${renderTextWithLinks(hotelName, true)}${details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-200/40 text-sm text-sumi-light/90 font-serif space-y-1">${details.map(d => `<div class="flex items-start gap-2 ${d.trim().startsWith('◆') ? 'mt-1' : 'pl-3.5'}">${d.trim().startsWith('◆') ? '<div class="mt-[6px] shrink-0 w-1.5 h-1.5 bg-accent-red/60 rotate-45 border border-accent-red/30"></div>' : ''}<span>${d.replace('◆','').trim()}</span></div>`).join('')}</div>` : ''}</div></div></div></div>`;
         }
 
-        // 5. Stories & Recommendations
+        // 5. Stories & Recs
         let storiesHtml = '';
         if (day.stories || day.recommendations) {
-            let recs = '';
-            if (day.recommendations) {
-                recs = day.recommendations.map(rec => `
-                    <div class="bg-white/60 p-3 rounded border border-stone-200 shadow-sm backdrop-blur-sm">
-                        <div class="flex items-center gap-2 mb-2 text-xs font-serif font-bold tracking-wider">
-                           ${rec.type === 'food' ? `<span class="bg-red-50 text-red-700 px-2 py-0.5 rounded border border-red-100 flex items-center gap-1"><i data-lucide="utensils" width="10" height="10"></i>${rec.title}</span>` : `<span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-100 flex items-center gap-1"><i data-lucide="shopping-bag" width="10" height="10"></i>${rec.title}</span>`}
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            ${rec.items.map(i => `<div class="inline-flex items-baseline gap-1.5 text-sm"><span class="font-serif font-bold text-sumi">${i.name}</span><span class="text-[10px] font-sans text-stone-500 bg-stone-100 px-1 rounded-sm">${i.jpName}</span></div>`).join('')}
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            let storyCards = '';
-            if (day.stories) {
-                storyCards = day.stories.map(s => `
-                    <div class="bg-[#FDFCF8] border border-stone-300/60 p-4 rounded-sm relative overflow-hidden group hover:shadow-sm transition-shadow">
-                        <div class="absolute top-0 right-0 w-8 h-8 bg-stone-100 rounded-bl-3xl z-0 transition-transform group-hover:scale-150 duration-500"></div>
-                        <div class="relative z-10">
-                            <div class="mb-3">
-                                <h4 class="font-serif font-bold text-sumi flex items-center gap-2"><i data-lucide="book-open" class="text-accent-gold" width="14" height="14"></i><span>${s.title}</span></h4>
-                                ${s.titleJp ? `<div class="text-xs text-accent-blue/80 font-bold font-sans ml-6 mt-1 tracking-wide leading-tight">${s.titleJp.split('\n').map((l,i) => `<span class="${i===1 ? 'block text-[8px] text-sumi-light/70 font-normal mt-0.5' : ''}">${l}</span>`).join('')}</div>` : ''}
-                            </div>
-                            <div class="space-y-3">
-                                ${s.contentJp ? `<p class="text-sm text-sumi leading-7 text-justify font-serif border-l-2 border-accent-gold/30 pl-3">${s.contentJp}</p>` : ''}
-                                <div class="relative pt-2"><div class="w-4 h-[1px] bg-stone-300 mb-2"></div><p class="text-xs text-sumi-light leading-relaxed text-justify font-sans opacity-90">${s.content}</p></div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            storiesHtml = `
-            <div class="pt-6 pl-2 relative z-10">
-                 <h3 class="flex items-center gap-3 text-sm font-serif font-bold text-sumi-light mb-4 ml-10 whitespace-nowrap"><span class="w-8 h-[1px] bg-stone-300 shrink-0"></span><span>旅のしおり</span><span class="w-full h-[1px] bg-stone-300"></span></h3>
-                 <div class="pl-12 mb-6 space-y-4">${recs}</div>
-                 <div class="pl-12 space-y-4">${storyCards}</div>
-            </div>`;
+            let recs = day.recommendations ? `<div class="pl-12 mb-6 space-y-4">${day.recommendations.map(rec => `<div class="bg-white/60 p-3 rounded border border-stone-200 shadow-sm backdrop-blur-sm"><div class="flex items-center gap-2 mb-2 text-xs font-serif font-bold tracking-wider"><span class="${rec.type === 'food' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-indigo-50 text-indigo-700 border-indigo-100'} px-2 py-0.5 rounded border flex items-center gap-1"><i data-lucide="${rec.type === 'food' ? 'utensils' : 'shopping-bag'}" width="10" height="10"></i>${rec.title}</span></div><div class="flex flex-wrap gap-2">${rec.items.map(i => `<div class="inline-flex items-baseline gap-1.5 text-sm"><span class="font-serif font-bold text-sumi">${i.name}</span><span class="text-[10px] font-sans text-stone-500 bg-stone-100 px-1 rounded-sm">${i.jpName}</span></div>`).join('')}</div></div>`).join('')}</div>` : '';
+            let storyCards = day.stories ? `<div class="pl-12 space-y-4">${day.stories.map(s => `<div class="bg-[#FDFCF8] border border-stone-300/60 p-4 rounded-sm relative overflow-hidden group hover:shadow-sm transition-shadow"><div class="absolute top-0 right-0 w-8 h-8 bg-stone-100 rounded-bl-3xl z-0 transition-transform group-hover:scale-150 duration-500"></div><div class="relative z-10"><div class="mb-3"><h4 class="font-serif font-bold text-sumi flex items-center gap-2"><i data-lucide="book-open" width="14" height="14" class="text-accent-gold"></i><span>${s.title}</span></h4>${s.titleJp ? `<div class="text-xs text-accent-blue/80 font-bold font-sans ml-6 mt-1 tracking-wide leading-tight">${s.titleJp.split('\n').map((l,i) => `<span class="${i===1 ? 'block text-[8px] text-sumi-light/70 font-normal mt-0.5' : ''}">${l}</span>`).join('')}</div>` : ''}</div><div class="space-y-3">${s.contentJp ? `<p class="text-sm text-sumi leading-7 text-justify font-serif border-l-2 border-accent-gold/30 pl-3">${s.contentJp}</p>` : ''}<div class="relative pt-2"><div class="w-4 h-[1px] bg-stone-300 mb-2"></div><p class="text-xs text-sumi-light leading-relaxed text-justify font-sans opacity-90">${s.content}</p></div></div></div></div>`).join('')}</div>` : '';
+            storiesHtml = `<div class="pt-6 pl-2 relative z-10"><h3 class="flex items-center gap-3 text-sm font-serif font-bold text-sumi-light mb-4 ml-10 whitespace-nowrap"><span class="w-8 h-[1px] bg-stone-300 shrink-0"></span><span>旅のしおり</span><span class="w-full h-[1px] bg-stone-300"></span></h3>${recs}${storyCards}</div>`;
         }
 
-        // --- Final Assembly ---
-        container.innerHTML = `
-        <div class="w-full max-w-lg mx-auto pb-32 animate-fade-in px-5">
-            ${weatherHtml}
-            ${notesHtml}
-            <div class="space-y-6 relative">
-                 <div class="absolute left-[15px] top-2 bottom-2 w-[1px] bg-stone-300/50 z-0"></div>
-                 ${itineraryHtml}
-            </div>
-            ${accHtml}
-            ${storiesHtml}
-            <div class="mt-16 flex justify-center opacity-20 text-accent-blue"><i data-lucide="snowflake" width="24" height="24"></i></div>
-        </div>`;
-
-        // Re-initialize icons
+        container.innerHTML = `<div class="w-full max-w-lg mx-auto pb-32 animate-fade-in px-5">${weatherHtml}${notesHtml}<div class="space-y-6 relative"><div class="absolute left-[15px] top-2 bottom-2 w-[1px] bg-stone-300/50 z-0"></div>${itineraryHtml}</div>${accHtml}${storiesHtml}<div class="mt-16 flex justify-center opacity-20 text-accent-blue"><i data-lucide="snowflake" width="24" height="24"></i></div></div>`;
+        
         lucide.createIcons();
-
-        // --- Event Listeners for Notes ---
+        
         const textarea = document.getElementById('day-note-textarea');
         if (textarea) {
-            // Auto resize helper
-            const resize = () => {
-                textarea.style.height = 'auto';
-                textarea.style.height = textarea.scrollHeight + 'px';
-            };
-            
-            // Initial resize
-            resize();
-
-            textarea.addEventListener('input', (e) => {
-                resize();
-                
-                // Save to localStorage
-                const newVal = e.target.value;
-                const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}');
-                notesMap[day.date] = newVal;
-                localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap));
-            });
-
-            textarea.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.isComposing) {
-                    e.preventDefault();
-                    const start = textarea.selectionStart;
-                    const end = textarea.selectionEnd;
-                    const value = textarea.value;
-                    // Auto-insert bullet
-                    const insertion = '\n• ';
-                    
-                    textarea.value = value.substring(0, start) + insertion + value.substring(end);
-                    textarea.selectionStart = textarea.selectionEnd = start + insertion.length;
-                    
-                    // Trigger input event to save and resize
-                    textarea.dispatchEvent(new Event('input'));
-                }
-            });
+             const resize = () => { textarea.style.height = 'auto'; textarea.style.height = textarea.scrollHeight + 'px'; };
+             resize();
+             textarea.addEventListener('input', (e) => { resize(); const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}'); notesMap[day.date] = e.target.value; localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap)); });
         }
     }
 
-    async function fetchWeather(cities) {
-        cities.forEach(async city => {
-            const el = document.getElementById(`weather-data-${city}`);
-            if (!el) return;
-            const coords = CITY_COORDINATES[city];
-            if (!coords) return;
-            
-            try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`);
-                const data = await res.json();
-                el.innerHTML = `${getWeatherIcon(data.current.weather_code)} <span class="text-lg font-bold font-sans text-sumi-light">${Math.round(data.current.temperature_2m)}°</span>`;
-                lucide.createIcons();
-            } catch (e) {
-                el.innerHTML = '<span class="text-xs text-red-400">Error</span>';
-            }
-        });
-    }
     function init() {
         const navContainer = document.getElementById('date-nav');
+        if (!navContainer) return; 
         navContainer.innerHTML = '';
+        if (!TRIP_DATA || TRIP_DATA.length === 0) { console.error("TRIP_DATA is empty!"); return; }
+
         TRIP_DATA.forEach((day, index) => {
-            // ... (Nav rendering logic same as before) ...
             const currentTheme = getCurrentTheme(index);
             const prevTheme = index > 0 ? getCurrentTheme(index - 1) : null;
+            
             if (currentTheme !== prevTheme) {
                 const themeDiv = document.createElement('div');
                 themeDiv.className = "flex-shrink-0 flex items-center justify-center pl-1 pr-3 snap-start h-[4.5rem]";
-                themeDiv.innerHTML = `<div class="h-full flex items-center border-l-2 border-stone-300/30 pl-2"><span class="text-[10px] font-serif font-medium text-sumi-light/70 tracking-widest [writing-mode:vertical-rl] h-auto whitespace-nowrap">${currentTheme}</span></div>`;
+                themeDiv.innerHTML = `<div class="h-full flex items-center border-l-2 border-stone-300/30 pl-2"><span class="text-[10px] font-serif font-medium text-[#666666] tracking-widest" style="writing-mode: vertical-rl;">${currentTheme}</span></div>`;
                 navContainer.appendChild(themeDiv);
             }
+            
             const btn = document.createElement('button');
             const isSelected = index === 0;
-            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 text-washi shadow-md scale-105 border-stone-500' : 'bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200'}`;
             const dateParts = day.dayLabel.split('(')[0].split('/');
-            const dayOfWeek = day.dayLabel.match(/\((.)\)/)?.[1];
-            btn.innerHTML = `<span class="text-xl font-serif font-bold -mb-0.5 tracking-wider ${isSelected ? 'text-washi' : 'text-sumi'}">${dateParts[1]}</span><span class="text-[9px] mb-1 font-serif ${isSelected ? 'opacity-90' : 'opacity-50'}">${dayOfWeek}</span><span class="text-[8px] tracking-tighter font-medium border-t pt-0.5 w-[90%] px-0.5 text-center leading-tight whitespace-normal line-clamp-2 ${isSelected ? 'border-white/30' : 'border-stone-100 text-sumi-light'}">${day.route}</span>`;
-            btn.onclick = () => selectDay(index);
+            const dayNum = dateParts[1] || '?';
+            const dayOfWeek = day.dayLabel.match(/\((.)\)/)?.[1] || '';
+            
+            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 border-stone-500' : 'bg-white border-stone-100 hover:border-stone-200 shadow-sm'}`;
             btn.setAttribute('data-day-index', index);
+            btn.innerHTML = `
+                <span class="block text-xl font-serif font-bold -mb-0.5 tracking-wider leading-none ${isSelected ? 'text-[#F7F5F0]' : 'text-[#3E3E3E]'}">${dayNum}</span>
+                <span class="block text-[9px] mb-1 font-serif leading-none ${isSelected ? 'text-[#F7F5F0] opacity-90' : 'text-[#3E3E3E] opacity-50'}">${dayOfWeek}</span>
+                <span class="block w-[90%] text-[8px] tracking-tighter font-medium border-t pt-0.5 px-0.5 text-center leading-tight whitespace-nowrap overflow-hidden text-ellipsis ${isSelected ? 'border-white/30 text-[#F7F5F0]' : 'border-stone-100 text-[#666666]'}">${day.route}</span>
+            `;
+            btn.onclick = () => selectDay(index);
             navContainer.appendChild(btn);
         });
 
-        renderDayCard(0);
-        lucide.createIcons();
+        if (typeof renderDayCard === 'function') { renderDayCard(0); }
+        if (window.lucide) { window.lucide.createIcons(); }
 
-        // ✅ 修正點 2: 右下角按鈕連結修復
         const mapBtn = document.getElementById('map-btn');
         if (mapBtn) {
             mapBtn.onclick = () => {
@@ -2151,17 +2032,19 @@
         buttons.forEach(btn => {
             const idx = parseInt(btn.getAttribute('data-day-index'));
             const isSelected = idx === index;
-            // Update styles manually or re-render (manual class update is faster)
-            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 text-washi shadow-md scale-105 border-stone-500' : 'bg-white text-sumi border-stone-100 shadow-sm hover:border-stone-200'}`;
-            const span1 = btn.querySelector('span:nth-child(1)'); if(span1) span1.className = `text-xl font-serif font-bold -mb-0.5 tracking-wider ${isSelected ? 'text-washi' : 'text-sumi'}`;
-            const span2 = btn.querySelector('span:nth-child(2)'); if(span2) span2.className = `text-[9px] mb-1 font-serif ${isSelected ? 'opacity-90' : 'opacity-50'}`;
-            const span3 = btn.querySelector('span:nth-child(3)'); if(span3) span3.className = `text-[8px] tracking-tighter font-medium border-t pt-0.5 w-[90%] px-0.5 text-center leading-tight whitespace-normal line-clamp-2 ${isSelected ? 'border-white/30' : 'border-stone-100 text-sumi-light'}`;
-            if (isSelected) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            btn.className = `flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-[4.5rem] rounded-xl transition-all duration-300 border overflow-hidden ${isSelected ? 'bg-stone-500 border-stone-500' : 'bg-white border-stone-100 hover:border-stone-200 shadow-sm'}`;
+            const spans = btn.querySelectorAll('span');
+            if (spans.length >= 3) {
+                spans[0].className = `block text-xl font-serif font-bold -mb-0.5 tracking-wider leading-none ${isSelected ? 'text-[#F7F5F0]' : 'text-[#3E3E3E]'}`;
+                spans[1].className = `block text-[9px] mb-1 font-serif leading-none ${isSelected ? 'text-[#F7F5F0] opacity-90' : 'text-[#3E3E3E] opacity-50'}`;
+                spans[2].className = `block w-[90%] text-[8px] tracking-tighter font-medium border-t pt-0.5 px-0.5 text-center leading-tight whitespace-nowrap overflow-hidden text-ellipsis ${isSelected ? 'border-white/30 text-[#F7F5F0]' : 'border-stone-100 text-[#666666]'}`;
+            }
+            if (isSelected) { btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
         });
-        renderDayCard(index);
+        if (typeof renderDayCard === 'function') { renderDayCard(index); }
     }
 
-    init();
+    window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>

@@ -1930,7 +1930,20 @@
         let displayTime = null, displayContent = item.content;
         if (timeMatch) { displayTime = timeMatch[1]; displayContent = timeMatch[2]; }
         
-        let contentHtml = isPlainText ? `<div class="text-sumi font-serif text-sm font-medium leading-relaxed">${displayContent}</div>` : `<a href="${getMapLink(cleanLocationName(displayContent))}" target="_blank" class="text-sumi font-serif text-sm font-medium leading-relaxed group-hover/link:text-accent-red transition-colors decoration-accent-red/30 underline-offset-4 group-hover/link:underline">${displayContent}</a>`;
+        let targetUrl = '#';
+        if (!isPlainText) {
+            // 先嘗試直接查表
+            if (customLinks[displayContent]) {
+                targetUrl = customLinks[displayContent];
+            } else {
+                // 查不到才去清洗名稱並搜尋地圖
+                targetUrl = getMapLink(cleanLocationName(displayContent));
+            }
+        }
+
+        let contentHtml = isPlainText ? 
+            `<div class="text-sumi font-serif text-sm font-medium leading-relaxed">${displayContent}</div>` : 
+            `<a href="${targetUrl}" target="_blank" class="text-sumi font-serif text-sm font-medium leading-relaxed group-hover/link:text-accent-red transition-colors decoration-accent-red/30 underline-offset-4 group-hover/link:underline">${displayContent}</a>`;
         
         let suggestionHtml = '';
         const mealKey = item.content.includes('朝食') ? '朝食' : (item.content.includes('昼食') ? '昼食' : (item.content.includes('夕食') ? '夕食' : null));

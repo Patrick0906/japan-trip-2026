@@ -1719,7 +1719,7 @@
         if (/^.+?\s+\d{1,2}:\d{2}\s*[-〜~]\s*.+?\s+\d{1,2}:\d{2}/.test(trimmed)) return true;
         
         // 包含您要求的關鍵字過濾
-        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '行', '鉄道一般', '線', 'シャトル', '連絡'];
+        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '鉄道一般', 'シャトル'];
         if (excludeKeywords.some(k => trimmed.includes(k))) return false;
 
         if (trimmed.startsWith('※') || trimmed.startsWith('【')) return false;
@@ -1919,7 +1919,7 @@
     function renderSpotItem(item, dayLabel) {
         const isBoat = (item.content.includes('遊覽船') || item.content.includes('船')) && !item.content.includes('八甲田丸');
         
-        const logisticKeywords = ['朝食', '昼食', '夕食', '午餐', '晚餐', '飯店', '泡湯', '行李', '超市', '可樂餅', '採買', '喝酒', 'チェックイン', 'チェックアウト', 'ホテル', '荷物', '晩酌', '機內食', '駅弁', '買い物', '購入', 'タクシー', '搭乘手續き', '手荷物預け', 'LOUNGE', 'Lounge', 'ラウンジ', '急行', 'エクスプレス', '行', '鉄道一般', '線', '連絡'];
+        const logisticKeywords = ['朝食', '昼食', '夕食', '午餐', '晚餐', '飯店', '泡湯', '行李', '超市', '可樂餅', '採買', '喝酒', 'チェックイン', 'チェックアウト', 'ホテル', '荷物', '晩酌', '機內食', '駅弁', '買い物', '購入', 'タクシー', '搭乘手續き', '手荷物預け', 'LOUNGE', 'Lounge', 'ラウンジ'];
         const isLogistic = logisticKeywords.some(keyword => item.content.includes(keyword));
         
         let iconHtml = isBoat ? `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10 bg-cyan-50 border border-cyan-200 rounded-full"><i data-lucide="ship" class="text-cyan-600" width="14" height="14"></i></div>` : `<div class="mt-1.5 shrink-0 w-7 h-7 flex items-center justify-center z-10"><div class="w-2 h-2 rounded-full ${isLogistic ? 'bg-stone-400' : 'bg-accent-red'} ring-4 ring-washi group-hover:scale-110 transition-transform shadow-[0_0_0_2px_#F7F5F0]"></div></div>`;

@@ -2093,7 +2093,21 @@
              const lines = day.accommodation.split('\n');
              const hotelName = lines[0];
              const details = lines.slice(1);
-             accHtml = `<div class="pt-8 relative z-10 pl-2 mb-6"><div class="flex gap-4 items-start"><div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 z-10 shadow-[0_0_0_1px_rgba(255,255,255,1)]"><i data-lucide="bed" width="14" height="14"></i></div><div class="flex-1 bg-[#F5F4F0] p-5 rounded-sm border border-stone-200 hover:border-violet-200/50 transition-colors"><h3 class="text-[10px] font-serif text-violet-600/70 uppercase tracking-widest mb-2 flex items-center gap-2"><span>Accommodation</span><span class="h-[1px] flex-1 bg-stone-300/50"></span></h3><div class="text-base font-serif text-sumi leading-relaxed">${renderTextWithLinks(hotelName, true)}${details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-200/40 text-sm text-sumi-light/90 font-serif space-y-1">${details.map(d => `<div class="flex items-start gap-2 ${d.trim().startsWith('◆') ? 'mt-1' : 'pl-3.5'}">${d.trim().startsWith('◆') ? '<div class="mt-[6px] shrink-0 w-1.5 h-1.5 bg-accent-red/60 rotate-45 border border-accent-red/30"></div>' : ''}<span>${d.replace('◆','').trim()}</span></div>`).join('')}</div>` : ''}</div></div></div></div>`;
+
+             // ★★★ 新增：判斷日期並產生連結 HTML ★★★
+             let specialLinkHtml = '';
+             if (day.date === '2026年2月12日' || day.date === '2026年2月13日') {
+                 specialLinkHtml = `
+                 <div class="mt-2 pt-2 border-t border-stone-200/40">
+                    <a href="https://www.torican.jp/feature/tottorishi-syukuhakuCP-2" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs font-bold text-accent-red hover:text-red-700 transition-colors">
+                        <i data-lucide="ticket" width="14" height="14"></i>
+                        <span>鳥取市宿泊CP</span>
+                    </a>
+                 </div>`;
+             }
+
+             // 將 specialLinkHtml 插入到最後面
+             accHtml = `<div class="pt-8 relative z-10 pl-2 mb-6"><div class="flex gap-4 items-start"><div class="mt-1 shrink-0 w-7 h-7 rounded-full bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 z-10 shadow-[0_0_0_1px_rgba(255,255,255,1)]"><i data-lucide="bed" width="14" height="14"></i></div><div class="flex-1 bg-[#F5F4F0] p-5 rounded-sm border border-stone-200 hover:border-violet-200/50 transition-colors"><h3 class="text-[10px] font-serif text-violet-600/70 uppercase tracking-widest mb-2 flex items-center gap-2"><span>Accommodation</span><span class="h-[1px] flex-1 bg-stone-300/50"></span></h3><div class="text-base font-serif text-sumi leading-relaxed">${renderTextWithLinks(hotelName, true)}${details.length > 0 ? `<div class="mt-2 pt-2 border-t border-stone-200/40 text-sm text-sumi-light/90 font-serif space-y-1">${details.map(d => `<div class="flex items-start gap-2 ${d.trim().startsWith('◆') ? 'mt-1' : 'pl-3.5'}">${d.trim().startsWith('◆') ? '<div class="mt-[6px] shrink-0 w-1.5 h-1.5 bg-accent-red/60 rotate-45 border border-accent-red/30"></div>' : ''}<span>${d.replace('◆','').trim()}</span></div>`).join('')}</div>` : ''}${specialLinkHtml}</div></div></div></div>`;
         }
 
         // 5. Stories & Recs

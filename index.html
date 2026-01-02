@@ -1965,19 +1965,32 @@
         return `<div class="flex gap-4 group items-start">${iconHtml}<div class="flex-1 block ${!isPlainText ? 'group/link' : ''}"><div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">${displayTime ? `<span class="text-xs font-sans text-sumi-light/70 whitespace-nowrap min-w-[3.5rem] pt-0.5">${displayTime}</span>` : ''}${contentHtml}</div>${suggestionHtml}${detailsHtml}</div></div>`;
     }
         
-// --- 天氣功能與快取 ---
-    const weatherCache = {};
+// --- 天氣功能與快取 (優化版：LocalStorage + 過期機制) ---
+    const WEATHER_CACHE_KEY = 'trip_weather_data_v2';
+    const CACHE_EXPIRY_MS = 60 * 60 * 1000; // 快取有效時間：1小時
 
+    function getLocalWeatherCache() {
+        try {
+            return JSON.parse(localStorage.getItem(WEATHER_CACHE_KEY)) || {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveLocalWeatherCache(data) {
+        localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(data));
+    }
+
+    // 支援同時處理多個城市
     async function fetchWeather(cities) {
-        cities.forEach(async city => {
+        const localCache = getLocalWeatherCache();
+        const now = Date.now();
+        let hasCacheUpdate = false;
+
+        // 使用 Promise.all 讓多個城市的請求「同時」發出，而不是一個接一個
+        const promises = cities.map(async city => {
             const el = document.getElementById(`weather-data-${city}`);
             if (!el) return;
-
-            // 1. 檢查快取 (如果有抓過就不再抓)
-            if (weatherCache[city]) {
-                updateWeatherUI(el, weatherCache[city]);
-                return;
-            }
 
             const coords = CITY_COORDINATES[city];
             if (!coords) {
@@ -1985,30 +1998,65 @@
                 return;
             }
 
-            try {
-                // 2. 請求 API
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`, { cache: "force-cache" });
-                
-                if (!res.ok) throw new Error('API Fail');
-                
-                const data = await res.json();
-                
-                const weatherInfo = {
-                    temp: Math.round(data.current.temperature_2m),
-                    code: data.current.weather_code
-                };
+            const cachedItem = localCache[city];
+            let shouldFetch = true;
 
-                // 3. 存入快取
-                weatherCache[city] = weatherInfo;
-                
-                // 4. 更新畫面
-                updateWeatherUI(el, weatherInfo);
+            // 1. 策略：如果有快取，無論是否過期，先「瞬間顯示」給使用者看 (提升體感速度)
+            if (cachedItem) {
+                updateWeatherUI(el, cachedItem);
+                // 如果快取還很新鮮 (在1小時內)，就不重新抓取
+                if (now - cachedItem.timestamp < CACHE_EXPIRY_MS) {
+                    shouldFetch = false;
+                }
+            }
 
-            } catch (e) {
-                console.error(`Weather error for ${city}:`, e);
-                el.innerHTML = '<span class="text-[9px] text-stone-300">N/A</span>';
+            // 2. 如果沒有快取，或者快取過期了，就去背景抓新的
+            if (shouldFetch) {
+                try {
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`);
+                    if (!res.ok) throw new Error('API Fail');
+                    const data = await res.json();
+
+                    const weatherInfo = {
+                        temp: Math.round(data.current.temperature_2m),
+                        code: data.current.weather_code,
+                        timestamp: now // 紀錄抓取時間
+                    };
+
+                    // 更新畫面 (如果原本是舊快取，這裡會更新成新的)
+                    updateWeatherUI(el, weatherInfo);
+                    
+                    // 更新快取物件
+                    localCache[city] = weatherInfo;
+                    hasCacheUpdate = true;
+
+                } catch (e) {
+                    console.error(`Weather error for ${city}:`, e);
+                    // 如果抓取失敗但沒有快取，顯示 N/A
+                    if (!cachedItem) {
+                        el.innerHTML = '<span class="text-[9px] text-stone-300">N/A</span>';
+                    }
+                }
             }
         });
+
+        // 等待所有請求完成後，如果有更新才寫入 LocalStorage (減少寫入次數)
+        await Promise.all(promises);
+        if (hasCacheUpdate) {
+            saveLocalWeatherCache(localCache);
+        }
+    }
+
+    function updateWeatherUI(el, info) {
+        // 使用 innerHTML 替換內容
+        el.innerHTML = `
+            ${getWeatherIcon(info.code)} 
+            <span class="text-lg font-bold font-sans text-sumi-light animate-fade-in">${info.temp}°</span>
+        `;
+        // 重要：因為是用 innerHTML 插入的 icon，必須重新觸發 Lucide 渲染
+        if (window.lucide) {
+            window.lucide.createIcons({ root: el });
+        }
     }
 
     function updateWeatherUI(el, info) {

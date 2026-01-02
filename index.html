@@ -1422,7 +1422,7 @@
     dayLabel: "2/15(日)",
     route: "鎌倉",
     morning: "朝食：ホテル\n行程：\n• 7:00 朝食\n--------------------\n浅草橋 7:51 → 錦糸町 7:56\n中央・総武線各停(津田沼行)\n錦糸町 3 番線発 8:00 → 北鎌倉 9:00\n総武線快速(逗子行) 950 円\n--------------------\n• 鎌倉江の島七福神めぐり\n• 9:10 浄智寺\n布袋尊（ほていそん）福徳円満の神\n--------------------\n明月院 9:49 → 鎌倉八幡宮前 9:53\n[江ノ電バス]［Ｎ２］鎌倉駅〜大船駅(鎌倉駅東口行) 210 円",
-    afternoon: "昼食：文佐食堂\n行程：\n• 10:00 鶴岡八幡宮（旗上弁財天社）\n弁財天（べんざいてん）芸能成就の神\n• 10:25 宝戒寺\n毘沙門天（びしゃもんてん）勝運来福の神\n• 10:50 妙隆寺\n寿老人（じゅろうじん）長寿延命の神\n• 11:15 本覚寺\n夷尊神(恵比寿)（えびす）商売繁盛の神\n--------------------\n鎌倉 11:54 → 腰越 12:16\n[江ノ島電鉄線(藤沢行) 220 円\n--------------------\n• 12:30 昼食\n• 13:20 江島神社\n弁財天（べんざいてん） 金寶富貴の神\n--------------------\n腰越 14:01 → 極楽寺 14:16\n江ノ島電鉄線(鎌倉行) 220 円\n--------------------\n• 14:30 御霊神社\n福禄寿（ふくろくじゅ）家禄永遠の神\n• 15:10 長谷寺\n大黒天（だいこくてん）出世開運の神\n• 15:40 HATAGO KAMAKURA\n• 16:10 秀吉\n• 16:30 由比ヶ浜\n• 17:00 稲村ヶ崎\n• 17:10 稲村ヶ崎温泉",
+    afternoon: "昼食：文佐食堂\n行程：\n• 10:00 鶴岡八幡宮（旗上弁財天社）\n弁財天（べんざいてん）芸能成就の神\n• 10:25 宝戒寺\n毘沙門天（びしゃもんてん）勝運来福の神\n• 10:50 妙隆寺\n寿老人（じゅろうじん）長寿延命の神\n• 11:15 本覚寺\n夷尊神(恵比寿)（えびす）商売繁盛の神\n--------------------\n鎌倉 11:54 → 腰越 12:16\n[江ノ島電鉄線(藤沢行) 220 円\n江ノ島駅前 12:24 → 江ノ島 12:30\n[江ノ電バス]［Ｆ３］藤沢駅〜江ノ島(江ノ島行) 210円\n--------------------\n• 12:30 昼食\n• 13:20 江島神社\n弁財天（べんざいてん） 金寶富貴の神\n--------------------\n江の島西緑地駐輪スペース 13:50 → HOTEL AO KAMAKURA 13:59\nレンタサイクル 9分 160円\n腰越 14:01 → 極楽寺 14:16\n江ノ島電鉄線(鎌倉行) 220 円\n--------------------\n• 14:30 御霊神社\n福禄寿（ふくろくじゅ）家禄永遠の神\n• 15:10 長谷寺\n大黒天（だいこくてん）出世開運の神\n• 15:40 HATAGO KAMAKURA\n• 16:10 秀吉\n• 16:30 由比ヶ浜\n• 17:00 稲村ヶ崎\n• 17:10 稲村ヶ崎温泉",
     evening: "夕食：Osteria Da Ada オステリア ダ アダ\n行程：\n稲村ヶ崎 17:57 → 鎌倉 18:07\n江ノ島電鉄線(鎌倉行) 220 円\n鎌倉 18:13 → 新橋 19:03\n横須賀線(東京行) 830 円\n新橋 19:14 → 浅草橋 19:24\n都営浅草線(印旛日本医大行) 220円\n--------------------\n• ホテルで休憩\n• 買い物\n• 夕食\n• ホテルで休憩",
     accommodation: "東横INNアキバ浅草橋駅東口",
     notes: "【諸福の結び】の章：湘南海岸の七福神と黒湯の癒やし",
@@ -1892,12 +1892,23 @@
     }
 
     function renderTransportItem(item) {
+        // 判斷是否為巴士
         const isBus = item.details?.some(d => d.includes('Bus') || d.includes('バス') || d.includes('空港線') || d.includes('くにびき')) || item.content.includes('Bus') || item.content.includes('バス') || item.content.includes('のりば');
+        // 判斷是否為船
         const isShip = !isBus && item.content.includes('船') && !item.content.includes('大船');
+        // 判斷是否為計程車
         const isTaxi = item.details?.some(d => d.includes('タクシー')) || item.content.includes('タクシー');
+        
+        // ★★★ 新增：判斷是否為自行車 (關鍵字：bike, 自転車, レンタサイクル) ★★★
+        const isBike = item.details?.some(d => d.toLowerCase().includes('bike') || d.includes('自転車') || d.includes('レンタサイクル')) || item.content.toLowerCase().includes('bike') || item.content.includes('自転車') || item.content.includes('レンタサイクル');
+
+        // 設定顏色樣式
         const colors = isBus ? { bg: 'bg-indigo-50', border: 'border-indigo-200', borderHover: 'group-hover:border-indigo-400', text: 'text-indigo-600', linkHover: 'hover:text-indigo-700', decoration: 'decoration-indigo-300', icon: 'bus' } : 
                        isShip ? { bg: 'bg-cyan-50', border: 'border-cyan-200', borderHover: 'group-hover:border-cyan-400', text: 'text-cyan-600', linkHover: 'hover:text-cyan-700', decoration: 'decoration-cyan-300', icon: 'ship' } : 
                        isTaxi ? { bg: 'bg-yellow-50', border: 'border-yellow-200', borderHover: 'group-hover:border-yellow-400', text: 'text-yellow-600', linkHover: 'hover:text-yellow-700', decoration: 'decoration-yellow-300', icon: 'car' } : 
+                       // ★★★ 新增：自行車的樣式 (使用 Lime 萊姆綠) ★★★
+                       isBike ? { bg: 'bg-lime-50', border: 'border-lime-200', borderHover: 'group-hover:border-lime-400', text: 'text-lime-600', linkHover: 'hover:text-lime-700', decoration: 'decoration-lime-300', icon: 'bike' } :
+                       // 預設樣式 (火車/電車)
                        { bg: 'bg-emerald-50', border: 'border-emerald-200', borderHover: 'group-hover:border-emerald-400', text: 'text-emerald-600', linkHover: 'hover:text-emerald-700', decoration: 'decoration-emerald-300', icon: 'train' };
 
         let contentHtml = item.content.split('\n').map(line => {
@@ -1916,7 +1927,6 @@
         let detailsHtml = item.details.length > 0 ? `<div class="text-xs text-sumi-light/80 font-serif border-t border-stone-200/50 pt-1 mt-1 space-y-1">${renderTextWithLinks(item.details.join('\n'))}</div>` : '';
         return `<div class="flex gap-4 group items-start"><div class="mt-1 shrink-0 w-7 h-7 rounded-full flex items-center justify-center z-10 transition-colors shadow-[0_0_0_1px_rgba(255,255,255,1)] border ${colors.bg} ${colors.border} ${colors.text} ${colors.borderHover}"><i data-lucide="${colors.icon}" width="14" height="14"></i></div><div class="flex-1 bg-[#F9F8F6] p-3 rounded-sm border border-stone-200/60"><div class="text-sumi font-serif text-sm leading-relaxed mb-1 flex flex-col gap-2">${contentHtml}</div>${detailsHtml}</div></div>`;
     }
-
     function renderSpotItem(item, dayLabel) {
         const isBoat = (item.content.includes('遊覽船') || item.content.includes('船')) && !item.content.includes('八甲田丸');
         

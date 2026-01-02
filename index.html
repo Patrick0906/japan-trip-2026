@@ -239,7 +239,7 @@
     dayLabel: "2/2(月)",
     route: "仁川 松江",
     morning: "朝食：仁川国際空港\nKALプレステージクラスラウンジ\n行程：\nホテルシアトルインチョンエアポ 5:30 → 仁川国際空港第1旅客ターミナル 5:45\nホテルシャトルバス\n第1旅客ターミナル3F中央(8番付近) 5:50 → 第2旅客ターミナル3F中央 5:59\n空港シャトルバス\n• 6:00 搭乗手続き・手荷物預け\n• 朝食\n--------------------\nOZ102 ICN 9:00 - NRT 11:20",
-    afternoon: "昼食：機内食\n行程：\n成田空港 12:20 → 品川 13:23\n成田エクスプレス20号(新宿行)\n品川 13:35 → 川崎 13:43\n東海道本線（東日本）(熱海行)\n--------------------\n• 買い物\n  JINS アトレ川崎店\n  ハンズ アトレ川崎店\n  B:MING LIFE STORE by BEAMS\n  ユニクロ\n  GU\n  FREAK'S STORE\n• ふるまいや アトレ川崎店\n--------------------\n京急川崎 16:48 → 羽田空港第１・第２ターミナル 17:04\n京急空港線急行(羽田空港第１・第２ターミナル行) 330円\n--------------------\n• 搭乗手続き・手荷物預け\n• World Wine Bar by Pieroth 羽田空港店",
+    afternoon: "昼食：機内食\n行程：\n成田空港 12:20 → 品川 13:23\n成田エクスプレス20号(新宿行)\n品川 13:35 → 川崎 13:43\n東海道本線（東日本）(熱海行)\n--------------------\n• 買い物\n  JINS アトレ川崎店\n  ハンズ アトレ川崎店\n  B:MING LIFE STORE by BEAMS\n  ユニクロ\n  GU\n  FREAK'S STORE\n• ふるまいや アトレ川崎店\n--------------------\n京急川崎 16:48 → 羽田空港第１・第２ターミナル 17:04\n京急本線急行(羽田空港第１・第２ターミナル行) 330円\n--------------------\n• 搭乗手続き・手荷物預け\n• World Wine Bar by Pieroth 羽田空港店",
     evening: "夕食：ANA LOUNGE\n行程：\n• ANA FESTA (空弁購入)\n  賛否両論「二段重弁当」\n• 第2ターミナル 展望デッキ\n• 18:30 夕食\n--------------------\nNH389 HND 19:55 - YGJ 21:20\n米子空港 21:35 → ＪＲ松江駅 22:20\n米子空港線［松江］(ＪＲ松江駅行) 1,200円\n松江駅 → 松江ニューアーバンホテル\nタクシー\n--------------------\n• ホテルで温泉・休憩",
     accommodation: "松江ニューアーバンホテル\n◆大浴場\nご利用時間\n6：00～10：00\n12：00～24：00\n（最終受付 23：30）",
     notes: "【旅立ち】の章：海峡を越え、神域の果てへ",
@@ -1895,20 +1895,27 @@
 
     function renderTransportItem(item) {
         // 判斷是否為巴士
-        const isBus = item.details?.some(d => d.includes('Bus') || d.includes('バス') || d.includes('空港線') || d.includes('くにびき')) || item.content.includes('Bus') || item.content.includes('バス') || item.content.includes('のりば');
+        // ★★★ 修改處：新增 '交通', 'コミュニティ', 'くる梨', '系統' 等關鍵字 ★★★
+        const busKeywords = ['Bus', 'バス', '空港線', 'くにびき', '交通', 'コミュニティ', 'くる梨', '系統', 'イエロー'];
+        
+        const isBus = item.details?.some(d => busKeywords.some(k => d.includes(k))) || 
+                      item.content.includes('Bus') || 
+                      item.content.includes('バス') || 
+                      item.content.includes('のりば');
+
         // 判斷是否為船
         const isShip = !isBus && item.content.includes('船') && !item.content.includes('大船');
+        
         // 判斷是否為計程車
         const isTaxi = item.details?.some(d => d.includes('タクシー')) || item.content.includes('タクシー');
         
-        // ★★★ 新增：判斷是否為自行車 (關鍵字：bike, 自転車, レンタサイクル) ★★★
+        // 判斷是否為自行車
         const isBike = item.details?.some(d => d.toLowerCase().includes('bike') || d.includes('自転車') || d.includes('レンタサイクル')) || item.content.toLowerCase().includes('bike') || item.content.includes('自転車') || item.content.includes('レンタサイクル');
 
         // 設定顏色樣式
         const colors = isBus ? { bg: 'bg-indigo-50', border: 'border-indigo-200', borderHover: 'group-hover:border-indigo-400', text: 'text-indigo-600', linkHover: 'hover:text-indigo-700', decoration: 'decoration-indigo-300', icon: 'bus' } : 
                        isShip ? { bg: 'bg-cyan-50', border: 'border-cyan-200', borderHover: 'group-hover:border-cyan-400', text: 'text-cyan-600', linkHover: 'hover:text-cyan-700', decoration: 'decoration-cyan-300', icon: 'ship' } : 
                        isTaxi ? { bg: 'bg-yellow-50', border: 'border-yellow-200', borderHover: 'group-hover:border-yellow-400', text: 'text-yellow-600', linkHover: 'hover:text-yellow-700', decoration: 'decoration-yellow-300', icon: 'car' } : 
-                       // ★★★ 新增：自行車的樣式 (使用 Lime 萊姆綠) ★★★
                        isBike ? { bg: 'bg-lime-50', border: 'border-lime-200', borderHover: 'group-hover:border-lime-400', text: 'text-lime-600', linkHover: 'hover:text-lime-700', decoration: 'decoration-lime-300', icon: 'bike' } :
                        // 預設樣式 (火車/電車)
                        { bg: 'bg-emerald-50', border: 'border-emerald-200', borderHover: 'group-hover:border-emerald-400', text: 'text-emerald-600', linkHover: 'hover:text-emerald-700', decoration: 'decoration-emerald-300', icon: 'train' };

@@ -2170,11 +2170,46 @@
         
         lucide.createIcons();
         
+        // ... (在 renderDayCard 函式的最後面) ...
+
         const textarea = document.getElementById('day-note-textarea');
         if (textarea) {
-             const resize = () => { textarea.style.height = 'auto'; textarea.style.height = textarea.scrollHeight + 'px'; };
+             const resize = () => { 
+                 textarea.style.height = 'auto'; 
+                 textarea.style.height = textarea.scrollHeight + 'px'; 
+             };
              resize();
-             textarea.addEventListener('input', (e) => { resize(); const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}'); notesMap[day.date] = e.target.value; localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap)); });
+
+             // ★★★ 新增：監聽按鍵，按下 Enter 時自動插入圓點 ★★★
+             textarea.addEventListener('keydown', function(e) {
+                 if (e.key === 'Enter') {
+                     e.preventDefault(); // 阻止預設的單純換行
+
+                     const start = this.selectionStart;
+                     const end = this.selectionEnd;
+                     
+                     // 在游標位置插入 "換行符號 + 圓點 + 空格"
+                     const text = this.value;
+                     const before = text.substring(0, start);
+                     const after = text.substring(end);
+                     
+                     this.value = before + "\n• " + after;
+                     
+                     // 將游標移動到圓點之後 (3 是因為 \n• 加空格共 3 個字元)
+                     this.selectionStart = this.selectionEnd = start + 3;
+
+                     // 手動觸發 input 事件，以確保會執行下方的 resize 和 localStorage 儲存
+                     this.dispatchEvent(new Event('input'));
+                 }
+             });
+
+             // 原有的輸入監聽 (負責自動調整高度與儲存)
+             textarea.addEventListener('input', (e) => { 
+                 resize(); 
+                 const notesMap = JSON.parse(localStorage.getItem('trip_notes_v1') || '{}'); 
+                 notesMap[day.date] = e.target.value; 
+                 localStorage.setItem('trip_notes_v1', JSON.stringify(notesMap)); 
+             });
         }
     }
 

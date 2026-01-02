@@ -1762,8 +1762,10 @@
         if (index <= 7) return "雪の北国";
         if (index <= 10) return "蘇りの道";
         if (index <= 12) return "風紋の記憶";
-        if (index <= 15) return "諸福の結び"; 
-        if (index === 16) return "帰路";
+        // 修改這裡：將 15 改為 14
+        if (index <= 14) return "諸福の結び"; 
+        // 修改這裡：將 16 改為 15 (這是最後一天 2/16 的索引)
+        if (index === 15) return "帰路";
         return "備案";
     }
 

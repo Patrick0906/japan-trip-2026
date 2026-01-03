@@ -857,15 +857,14 @@
         title: '旅のグルメ',
         items: [
           { name: '弘前蘋果派 (大正浪漫)', jpName: 'アップルパイ' },
-          { name: '鶴橋老舖燒肉 (阿芝喜)', jpName: 'アジヨシ' },
-          { name: '阿倍野 章魚燒', jpName: 'やまちゃん' }
+          { name: '十三 喜八洲總本舖', jpName: '喜八洲総本舗' }
         ]
       },
       {
         type: 'souvenir',
         title: '旅の逸品',
         items: [
-          { name: '鶴橋手作泡菜', jpName: '鶴橋キムチ' },
+          { name: '喜八洲 御手洗糰子', jpName: 'みたらし団子' },
           { name: 'LE CHOCOLAT 甜點', jpName: '弘前のチョコ' }
         ]
       }
@@ -1720,7 +1719,7 @@
         if (/^.+?\s+\d{1,2}:\d{2}\s*[-〜~]\s*.+?\s+\d{1,2}:\d{2}/.test(trimmed)) return true;
         
         // 包含您要求的關鍵字過濾
-        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '鉄道一般', 'シャトル', '円', '一畑', '弘南', '御坊', '環状', 'くろしお', '内回り'];
+        const excludeKeywords = ['飯店', '朝食', '昼食', '夕食', '午餐', '晚餐', '車站', '泡湯', '花火', '喝酒', 'Note:', 'Action:', 'Info:', 'Lounge', 'LOUNGE', 'ANA LOUNGE', 'Gate', '貴賓室', 'チェックイン', 'チェックアウト', 'ホテル', '機內食', '晩酌', '搭乘手續き', '手荷物預け', '海産食品ハマ達', '八百屋GOHAN', '源ちゃん', 'ナギ的大樹', '速玉宮', '結宮', 'ゴトビキ岩', '買い物', '急行', 'エクスプレス', '鉄道一般', 'シャトル', '円', '一畑', '弘南', '御坊', '環状', 'くろしお', '内回り', '第三殿'];
         if (excludeKeywords.some(k => trimmed.includes(k))) return false;
 
         if (trimmed.startsWith('※') || trimmed.startsWith('【')) return false;
